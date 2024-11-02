@@ -12,7 +12,7 @@ class User {
     Date dateCreated
     Date lastUpdated
 
-    static hasMany = [logins: Login, records: UserRecord]
+    static hasMany = [logins: Login, records: UserRecord, statisitics:AssetStatistics, scores: Score]
     static constraints = {
         name maxSize: 30
         userName unique: true, maxSize: 30
@@ -21,6 +21,8 @@ class User {
         avatar nullable: true, url: true
         logins nullable: true
         records nullable: true
+        statisitics nullable: true
+        scores nullable: true
     }
 
     static mapping = {

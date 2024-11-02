@@ -1,6 +1,8 @@
 package family.excitation.service.api
 
 import family.excitation.service.Login
+import family.excitation.service.Currency
+import family.excitation.service.UserRecord
 import family.excitation.service.LoginService
 import family.excitation.service.LoginType
 import family.excitation.service.User
@@ -75,7 +77,7 @@ class UserApiController {
     def quit() {
         def token = request.getHeader('app-token')
         if (token) {
-            Login.findByToken(token).delete()
+            Login.findByToken(token)?.delete()
         }
         withFormat {
             html {
@@ -85,5 +87,42 @@ class UserApiController {
                 respond new ApiResult(code: 200, msg: '退出成功'), formats: ['json']
             }
         }
+    }
+
+    def checkAuthValid() {
+        def token = request.getHeader('app-token')
+        if (!token) {
+            respond new ApiResult(code: 401, msg: '未登录')
+        } else {
+            def login = Login.findByToken(token)
+            if (login) {
+                respond new ApiResult(code: 200, msg: '已登录', data: login)
+            } else {
+                respond new ApiResult(code: 401, msg: '未登录')
+            }
+        }
+    }
+
+    def queryBalance(User user) {
+        def balance = Currency.list().collect {
+            def record = UserRecord.createCriteria().get {
+                eq('user', user)
+                eq('currency', it)
+                projections {
+                    sum('amount')
+                }
+            }
+            [currency: it, balance: record ? record[0] : 0]
+        }
+        respond new ApiResult(code: 200, msg: '查询成功', data: balance)
+    }
+
+    def queryScore(User user, long time) {
+        def scores = Score.createCriteria().list {
+            eq('user', user)
+            eq('discipline', it)
+            between('dateCreated', new Date(time), new Date(time + 86400000))
+        }
+        respond new ApiResult(code: 200, msg: '查询成功', data: scores)
     }
 }

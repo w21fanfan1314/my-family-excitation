@@ -1,0 +1,1 @@
+export const defaultAvatar = '/static/default_avatar.jpg'

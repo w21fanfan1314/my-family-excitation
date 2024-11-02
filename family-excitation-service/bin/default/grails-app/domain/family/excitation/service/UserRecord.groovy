@@ -6,10 +6,10 @@ class UserRecord {
     Double amount = 0
     Date dateCreated
     Date lastUpdated
-    User creator
 
-    static belongsTo = [user:User]
+    static belongsTo = [user:User, currency: Currency]
     static constraints = {
+        recordType nullable: false
         content nullable: true, maxSize: 500, widget: 'textarea'
     }
 
@@ -32,7 +32,11 @@ enum UserRecordType {
     // 充值
     RECHARGE,
     // 处罚
-    PUNISH
+    PUNISH,
+    // 转入
+    TRANSFER,
+    // 转出
+    TRANSFER_OUT,
 
     @Override
     String toString() {
@@ -45,6 +49,10 @@ enum UserRecordType {
                 return "充值"
             case PUNISH:
                 return "处罚"
+            case TRANSFER:
+                return "转入"
+            case TRANSFER_OUT:
+                return "转出"
             default:
                 return "未知"
         }

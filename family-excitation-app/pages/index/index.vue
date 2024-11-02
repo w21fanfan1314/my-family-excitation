@@ -1,0 +1,220 @@
+<template>
+  <view class="index-container">
+    <uni-notice-bar single scrollable showIcon :text="noticeText" :speed="20"></uni-notice-bar>
+    <uni-card>
+      <view class="user-info">
+        <image class="user-avatar" :src="user.userInfo?.avatar || defaultAvatar"></image>
+        <view class="info-container">
+          <text>{{user.userInfo?.name}}</text>
+          <uni-rate :max="starCount" :value="starCount" :readonly="true"></uni-rate>
+        </view>
+      </view>
+    </uni-card>
+
+    <uni-section type="line" title="我的资产">
+		<template v-slot:right>
+			<navigator :url="'/pages/record/record?userId=' + user.userInfo?.id">
+				<text>查看记录</text>
+			</navigator>
+		</template>
+     <uni-row>
+        <uni-card v-for="(item, index) in balanceData" 
+			:key="'user-balance-' + item.currency.id" :is-shadow="false" :title="item.currency.name" :class="{'top0': index === 0}">
+            <view class="amount">
+              <text class="currency">{{item.currency.symbol}}</text>
+              {{item.balance}}
+            </view>
+        </uni-card>
+     </uni-row>
+    </uni-section>
+    <uni-section v-if="scoreData?.scores?.length > 0" type="line" title="今日成绩">
+      <uni-grid :column="3" :show-border="false" :square="false">
+        <uni-grid-item v-for="(item, index) in scoreData?.scores" :key="'score-' + item.user.id+'-' + item.score.id">
+          <uni-card :is-shadow="false" :title="item.discipline.name" :class="{'top0': (index > 3)}">
+            <h1 style="text-align: center;">{{item.level}}</h1>
+          </uni-card>
+		</uni-grid-item>
+      </uni-grid>
+    </uni-section>
+
+    <uni-section type="line" title="规则介绍">
+      <uni-list :border="false">
+		  <uni-list-item title="1 作业成绩拿到A或者A+获得2元奖励"></uni-list-item>
+		  <uni-list-item title="2 如果每天可以集齐3颗星(🌟🌟🌟)额外获得2元奖励"></uni-list-item>
+		  <uni-list-item title="3 作业不认真对待,写字不公正等需要处罚" note="处罚1: 订正内容每个部分写一篇"></uni-list-item>
+	  </uni-list>
+    </uni-section>
+    <button type="error" style="width: 690rpx; margin-top: 80rpx; margin-bottom: 30rpx;" @click="onQuit">退出登录</button>
+  </view>
+</template>
+
+<script setup>
+import { computed, onMounted, readonly, ref } from 'vue';
+import { useUserStore } from '../../store/user';
+import { queryBalance, queryScore, queryTopAScore } from '../../api/UserApi';
+import { onReady, onPullDownRefresh } from '@dcloudio/uni-app'
+import { defaultAvatar } from '../../common/data';
+
+const user = useUserStore()
+const balanceData = ref()
+const scoreData = ref({starCount: 0, scores: []})
+const noticeData = ref([])
+const starCount = computed(() =>  scoreData.value?.starCount || 0)
+const noticeText = computed(() => noticeData.value?.map(item => (`🎉恭喜${item.user.name}同学的${item.discipline.name}获得${item.level}🎉`)).join('\t\t\t\t\t\t'))
+
+
+onReady(async () => {
+	await refreshData()
+})
+
+onPullDownRefresh(async() => {
+	try {
+		await refreshData()
+	} finally {
+		uni.stopPullDownRefresh()
+	}
+})
+
+async function refreshData() {
+	await user.loginValidCheck()
+	if (!user.isAuth) {
+		uni.redirectTo({
+			url: '/pages/login/login'
+		})
+		return;
+	} 
+	await loadData()
+}
+
+
+async function loadData() {
+	uni.showLoading({
+		title: '加载中...'
+	})
+	try {
+		await Promise.all([loadUserBalance(), loadUserScore(), loadNotice()])
+	} catch(err) {
+		uni.showToast({
+			icon: 'none',
+			title: '初始化页面数据错误'
+		})
+	} finally {
+		uni.hideLoading()
+	}
+}
+
+async function loadUserBalance() {
+	const res = await queryBalance({userId: user.userInfo.id});
+	if (res.code === 200) {
+		balanceData.value = res.data
+	}
+}
+
+
+async function loadUserScore() {
+	const res = await queryScore({userId: user.userInfo.id, time: Date.now()});
+	if (res.code === 200) {
+		scoreData.value = res.data
+	}
+}
+
+async function loadNotice() {
+	const res = await queryTopAScore({time: Date.now()});
+	if (res.code === 200) {
+		noticeData.value = res.data
+	}
+}
+
+async function onQuit() {
+	uni.showModal({
+		title: '提示',
+		content: '是否退出登录',
+		confirmText: '退出登录',
+		showCancel:true,
+		async success(res) {
+			if (res.confirm) {
+				uni.showLoading({
+					title: '退出中...'
+				})
+				try {
+					const res = await user.userQuit()
+					if (res.code === 200) {
+						uni.redirectTo({
+							url: '/pages/login/login'
+						})
+					} else {
+						uni.showToast({
+							icon: 'none',
+							title: res.msg
+						})
+					}
+				} catch(err) {
+					uni.showToast({
+						icon: 'none',
+						title: '退出登录错误'
+					})
+				} finally {
+					uni.hideLoading()
+				}
+			}
+		}
+	})
+}
+</script>
+
+<style scoped lang="scss">
+  .index-container {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+	
+	.top0 {
+		margin-top: 0;
+	}
+
+    .user-info {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      height: 100rpx;
+      width: 100%;
+      
+      .user-avatar {
+        width: 100rpx;
+        height: 100rpx;
+        border-radius: 10rpx;
+        background-color: $uni-bg-color-grey;
+      }
+
+      .info-container {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        margin-left: 12rpx;
+        height: 90%;
+        justify-content: space-between;
+
+        font-size: 1.2em;
+        color: black;
+        font-weight: bold;
+
+      }
+    }
+
+    .amount {
+      color: black;
+      font-weight: bold;
+      font-size: 1.5em;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      .currency {
+        font-size: 0.8em;
+        margin-right: 8rpx;
+        color: grey;
+      }
+    }
+    
+  }
+</style>
