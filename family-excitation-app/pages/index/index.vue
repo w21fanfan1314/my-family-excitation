@@ -9,6 +9,32 @@
           <uni-rate :max="starCount" :value="starCount" :readonly="true"></uni-rate>
         </view>
       </view>
+	  <uni-grid :column="3" :show-border="false" :square="false" class="menu-list">
+		  <uni-grid-item>
+			  <navigator url="/pages/shopping/shopping">
+				  <view class="menu-item">
+				  	<uni-icons type="shop-filled" color="#007aff" :size="24"></uni-icons>
+				  	商城
+				  </view>
+			  </navigator>
+		  </uni-grid-item>
+		  <uni-grid-item>
+			  <navigator url="/pages/order/order">
+				  <view class="menu-item">
+				  	<uni-icons type="cart-filled" color="#007aff" :size="24"></uni-icons>
+				  	订单
+				  </view>
+			  </navigator>
+		  </uni-grid-item>
+		  <uni-grid-item>
+			<view class="menu-item">
+				<uni-badge text="10" absolute="leftTop">
+					<uni-icons type="notification-filled" color="#007aff" :size="24"></uni-icons>			
+				</uni-badge>
+				消息
+			</view>	  
+		  </uni-grid-item>
+	  </uni-grid>
     </uni-card>
 
     <uni-section type="line" title="我的资产">
@@ -28,7 +54,7 @@
      </uni-row>
     </uni-section>
     <uni-section v-if="scoreData?.scores?.length > 0" type="line" title="今日成绩">
-      <uni-grid :column="3" :show-border="false" :square="false">
+      <uni-grid :column="2" :show-border="false" :square="false">
         <uni-grid-item v-for="(item, index) in scoreData?.scores" :key="'score-' + item.user.id+'-' + item.score.id">
           <uni-card :is-shadow="false" :title="item.discipline.name" :class="{'top0': (index > 3)}">
             <h1 style="text-align: center;">{{item.level}}</h1>
@@ -54,14 +80,15 @@ import { useUserStore } from '../../store/user';
 import { queryBalance, queryScore, queryTopAScore } from '../../api/UserApi';
 import { onReady, onPullDownRefresh } from '@dcloudio/uni-app'
 import { defaultAvatar } from '../../common/data';
+import { storeToRefs } from 'pinia'
 
 const user = useUserStore()
-const balanceData = ref()
 const scoreData = ref({starCount: 0, scores: []})
 const noticeData = ref([])
 const starCount = computed(() =>  scoreData.value?.starCount || 0)
 const noticeText = computed(() => noticeData.value?.map(item => (`🎉恭喜${item.user.name}同学的${item.discipline.name}获得${item.level}🎉`)).join('\t\t\t\t\t\t'))
-
+const {loadUserBalance} = user
+const {balanceData} = storeToRefs(user)
 
 onReady(async () => {
 	await refreshData()
@@ -69,13 +96,13 @@ onReady(async () => {
 
 onPullDownRefresh(async() => {
 	try {
-		await refreshData()
+		await refreshData(false)
 	} finally {
 		uni.stopPullDownRefresh()
 	}
 })
 
-async function refreshData() {
+async function refreshData(showLoading = true) {
 	await user.loginValidCheck()
 	if (!user.isAuth) {
 		uni.redirectTo({
@@ -83,14 +110,16 @@ async function refreshData() {
 		})
 		return;
 	} 
-	await loadData()
+	await loadData(showLoading)
 }
 
 
-async function loadData() {
-	uni.showLoading({
-		title: '加载中...'
-	})
+async function loadData(showLoading = true) {
+	if (showLoading) {
+		uni.showLoading({
+			title: '加载中...'
+		})
+	}
 	try {
 		await Promise.all([loadUserBalance(), loadUserScore(), loadNotice()])
 	} catch(err) {
@@ -99,16 +128,12 @@ async function loadData() {
 			title: '初始化页面数据错误'
 		})
 	} finally {
-		uni.hideLoading()
+		if (showLoading) {
+			uni.hideLoading()
+		}
 	}
 }
 
-async function loadUserBalance() {
-	const res = await queryBalance({userId: user.userInfo.id});
-	if (res.code === 200) {
-		balanceData.value = res.data
-	}
-}
 
 
 async function loadUserScore() {
@@ -198,9 +223,23 @@ async function onQuit() {
         font-size: 1.2em;
         color: black;
         font-weight: bold;
-
-      }
+      } 
     }
+	
+	.menu-list {
+		margin-top: 30rpx;
+		color: $uni-color-primary;
+		font-size: 28rpx;
+		font-weight: bold;
+		
+		.menu-item {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			padding: 10rpx 0;
+		}
+	}
 
     .amount {
       color: black;

@@ -5,6 +5,9 @@ import org.apache.commons.lang3.RandomUtils
 class Score {
     String level = ""
     Integer score = 0
+    // 奖励
+    Double award = 0.0
+    Currency awardCurrency
     Date dateCreated
     Date lastUpdated
 
@@ -12,6 +15,8 @@ class Score {
     static constraints = {
         level inList: ['A+', 'A', 'B', 'C', 'D'], maxSize: 2, blank: true, nullable: true
         score min: 0
+        award min: 0d
+        awardCurrency nullable: true
     }
 
     static mapping = {
@@ -50,6 +55,13 @@ class Score {
                 level = 'C'
             } else {
                 level = 'D'
+            }
+        }
+
+        if (award > 0 && awardCurrency) {
+            UserRecord userRecord = new UserRecord(user: user, recordType: UserRecordType.AWARD, amount: award, content: "奖励${discipline.name}获得了${level}的成绩", currency: awardCurrency)
+            UserRecord.withTransaction {
+                userRecord.save()
             }
         }
     }

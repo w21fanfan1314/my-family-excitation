@@ -1,15 +1,8 @@
 {
-  "hash": "36b90ec2",
+  "hash": "9c9b6eaa",
   "configHash": "0aac297c",
-  "lockfileHash": "5bc86926",
-  "browserHash": "99bf1263",
-  "optimized": {
-    "moment": {
-      "src": "../../../../../node_modules/moment/dist/moment.js",
-      "file": "moment.js",
-      "fileHash": "5b3bc437",
-      "needsInterop": false
-    }
-  },
+  "lockfileHash": "61b22928",
+  "browserHash": "e5c9ae60",
+  "optimized": {},
   "chunks": {}
 }

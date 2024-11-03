@@ -1,5 +1,6 @@
 <template>
-	<uni-list :border="false">
+	<tui-no-data v-if="recordsData.records?.length === 0"></tui-no-data>
+	<uni-list v-else :border="false">
 		<uni-list-item v-for="item in recordsData.records" :key="'user-record-' + item.id"
 			:title="'['+recordTypeToString(item.recordType.name) +'] '+item.currency.name+': ' + item.currency.symbol + item.amount"
 			:note="item.content" :right-text="moment(item.dateCreated).format('yyyy-MM-DD HH:mm')">
@@ -97,7 +98,14 @@
 				page
 			})
 			if (res.code === 200) {
-				recordsData.value = res.data
+				if (page === 0) {
+					recordsData.value = res.data
+				} else {
+					recordsData.value = {
+						...res.data,
+						records: [...recordsData.value.records, ...res.data.records]
+					}
+				}
 				formData.value.page = page
 			} else {
 				uni.showToast({

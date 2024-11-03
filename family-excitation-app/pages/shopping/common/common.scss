@@ -1,0 +1,45 @@
+@mixin commodity-item($img-size: 200rpx, $font-size: 1.1em) {
+	.commodity-item {
+		display: flex;
+		flex-direction: row;
+		
+		.item-img {
+			width: $img-size;
+			height: $img-size;
+			border-radius: 10rpx;
+		}
+		
+		.item-container {
+			font-size: $font-size;
+			color: $uni-text-color;
+			margin-left: 20rpx;
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			
+			.name {
+				font-weight: bold;
+			}
+			.item-price {
+				margin-top: 8rpx;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				color: $uni-color-error;
+				
+				.label {
+					font-size: .8em;
+					color: $uni-text-color-grey;
+					margin-right: 8rpx;
+				}
+			}
+			
+			.item-bottom {
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-end;
+				margin-top: 20rpx;
+			}
+		}
+	}
+}

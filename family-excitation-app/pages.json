@@ -1,4 +1,10 @@
 {
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"tui-(.*)": "thorui-uni/lib/thorui/tui-$1/tui-$1.vue"
+		}	
+	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
 			"path": "pages/index/index",
@@ -19,6 +25,43 @@
 			{
 				"navigationBarTitleText" : "存折",
 				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path" : "pages/user/user",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/shopping/shopping",
+			"style" : 
+			{
+				"navigationBarTitleText" : "购物",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path" : "pages/shopping/statement",
+			"style" : 
+			{
+				"navigationBarTitleText" : "结算单"
+			}
+		},
+		{
+			"path" : "pages/order/order",
+			"style" : 
+			{
+				"navigationBarTitleText" : "订单列表",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path" : "pages/order/detail",
+			"style" : 
+			{
+				"navigationBarTitleText" : "订单详情"
 			}
 		}
 	],

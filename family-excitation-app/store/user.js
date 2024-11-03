@@ -1,11 +1,12 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { checkAuthValid, login, quit } from "../api/UserApi";
+import { checkAuthValid, login, queryBalance, quit } from "../api/UserApi";
 
 const LOGIN_INFO_KEY = "LOGIN_INFO_KEY"
 	
 export const useUserStore = defineStore('user', () => {
     const loginInfoData = ref(uni.getStorageSync(LOGIN_INFO_KEY))
+	const balanceData = ref()
     const isAuth = computed(() => Boolean(loginInfo.value?.token))
     const token = computed(() => loginInfo.value?.token)
     const userInfo = computed(() => loginInfo.value?.user)
@@ -47,6 +48,15 @@ export const useUserStore = defineStore('user', () => {
 		}
 		return res
 	}
+	
+	async function loadUserBalance() {
+		const res = await queryBalance({userId: userInfo.value?.id});
+		if (res.code === 200) {
+			balanceData.value = res.data
+		}
+		return res
+	}
+	
     
     return {
         isAuth,
@@ -54,6 +64,8 @@ export const useUserStore = defineStore('user', () => {
         userInfo,
         userAuth,
 		loginValidCheck,
-		userQuit
+		userQuit,
+		loadUserBalance,
+		balanceData
     }
 })
