@@ -127,7 +127,7 @@ environments:
             url: jdbc:mysql://127.0.0.1:3306/family_excitation_db
             driverClassName: com.mysql.cj.jdbc.Driver
             username: admin
-            password: 'KkMRnfDppnsi5J5N'
+            password: 'Birsz4mb3KmPHRZB'
             properties:
                 jmxEnabled: true
                 initialSize: 5

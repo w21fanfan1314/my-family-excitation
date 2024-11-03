@@ -12,14 +12,12 @@ class Commodity {
     Date lastUpdated
 
     static belongsTo = [category: CommodityCategory]
-    static hasMany = [orders: Order]
     static constraints = {
         name unique: true, maxSize: 300
         price min: 0d
         specification nullable: true
         imageUrl nullable: true, url: true, maxSize: 500
         referenceUrl nullable: true, url: true, maxSize: 1000
-        orders nullable: true
     }
 
     static mapping = {

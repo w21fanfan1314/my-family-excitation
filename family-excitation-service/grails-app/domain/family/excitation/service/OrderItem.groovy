@@ -20,6 +20,7 @@ class OrderItem {
     }
 
     static mapping = {
+        table 'user_order_item'
         sort 'dateCreated'
         order 'desc'
     }
