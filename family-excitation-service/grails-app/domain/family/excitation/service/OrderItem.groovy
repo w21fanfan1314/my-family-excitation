@@ -5,6 +5,7 @@ class OrderItem {
     String imageUrl
     Double price = 0
     Integer buyCount = 1
+    String specification
     Commodity commodity
     Date dateCreated
     Date lastUpdated
@@ -15,6 +16,7 @@ class OrderItem {
         imageUrl nullable: true, maxSize: 500
         price min: 0d
         buyCount min: 1
+        specification nullable: true
     }
 
     static mapping = {

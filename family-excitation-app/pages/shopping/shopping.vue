@@ -14,6 +14,9 @@
 					</view>
 					<view class="item-container">
 						<text class="name">{{item.name}}</text>
+						<view class="spec" v-if="item.specification">
+							<tui-tag type="green" padding="8rpx 18rpx" size="24rpx" :plain="true">规格: {{item.specification}}</tui-tag>
+						</view>
 						<view class="item-price" v-if="!currenciesData">
 							<text class="label">人民币</text>¥{{item.price}}
 						</view>

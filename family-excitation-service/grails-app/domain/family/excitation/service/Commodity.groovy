@@ -7,6 +7,7 @@ class Commodity {
     String imageUrl
     // 外部参考链接，拼多多，淘宝网页地址
     String referenceUrl
+    String specification
     Date dateCreated
     Date lastUpdated
 
@@ -15,6 +16,7 @@ class Commodity {
     static constraints = {
         name unique: true, maxSize: 300
         price min: 0d
+        specification nullable: true
         imageUrl nullable: true, url: true, maxSize: 500
         referenceUrl nullable: true, url: true, maxSize: 1000
         orders nullable: true

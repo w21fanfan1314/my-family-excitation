@@ -26,7 +26,7 @@ class OrderApiController {
     }
 
 
-    def listOrders(Integer page = 0, Integer size = 20, OrderStatus status) {
+    def listOrders(OrderStatus status, Integer page, Integer size) {
         User user = Login.findByToken(request.getHeader('app-token'))?.user
         if (!user) {
             respond new ApiResult(code: 500, msg: '用户不存在')

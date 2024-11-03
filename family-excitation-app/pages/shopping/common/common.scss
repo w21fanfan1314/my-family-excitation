@@ -20,6 +20,11 @@
 			.name {
 				font-weight: bold;
 			}
+			.spec {
+				margin-top: 12rpx;
+				display: flex;
+				flex-direction: row;
+			}
 			.item-price {
 				margin-top: 8rpx;
 				display: flex;

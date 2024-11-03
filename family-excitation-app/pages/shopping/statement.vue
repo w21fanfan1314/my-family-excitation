@@ -7,6 +7,9 @@
 						<image class="item-img" :src="item.imageUrl" mode="aspectFill"></image>
 						<view class="item-container">
 							<text class="name">{{item.name}}</text>
+							<view class="spec" v-if="item.specification">
+								<tui-tag type="green" padding="8rpx 18rpx" size="24rpx" :plain="true">规格: {{item.specification}}</tui-tag>
+							</view>
 							<view class="item-price" v-if="!currenciesData">
 								<text class="label">人民币</text>¥{{item.price}}
 							</view>
@@ -89,6 +92,7 @@
 			commoditiesData.value = commodities?.map(item => ({name: item.name, 
 				imageUrl: item.imageUrl, 
 				price: item.price, 
+				specification: item.specification, 
 				buyCount: 1, 
 				commodity: item})) || [];
 			currenciesData.value = currencies
