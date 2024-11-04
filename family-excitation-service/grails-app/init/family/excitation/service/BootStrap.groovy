@@ -1,5 +1,8 @@
 package family.excitation.service
 
+import grails.converters.JSON
+import org.apache.commons.lang3.RandomUtils
+
 class BootStrap {
     UserService userService
     CurrencyService currencyService
@@ -9,6 +12,131 @@ class BootStrap {
     UserRecordService userRecordService
 
     def init = { servletContext ->
+        JSON.registerObjectMarshaller(Score) {
+            return [
+                    id: it.id,
+                    score: it.score,
+                    level: it.level,
+                    award: it.award,
+                    awdCurrency: it.awardCurrency,
+                    user: it.user,
+                    discipline: it.discipline,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated
+            ]
+        }
+
+        JSON.registerObjectMarshaller(User) {
+            return [
+                    id: it.id,
+                    name: it.name,
+                    userName: it.userName,
+                    password: it.password,
+                    birthday: it.birthday,
+                    avatar: it.avatar,
+                    gender: it.gender,
+                    role: it.role,
+                    position: it.position,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated
+            ]
+        }
+        JSON.registerObjectMarshaller(Discipline) {
+            return [
+                    id: it.id,
+                    name: it.name,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated
+            ]
+        }
+        JSON.registerObjectMarshaller(Currency) {
+            return [
+                    id: it.id,
+                    name: it.name,
+                    symbol: it.symbol,
+                    rate: it.rate,
+                    interest: it.interest,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated
+            ]
+        }
+        JSON.registerObjectMarshaller(Commodity) {
+            return [
+                    id: it.id,
+                    name: it.name,
+                    price: it.price,
+                    imageUrl: it.imageUrl,
+                    referenceUrl: it.referenceUrl,
+                    category: it.category,
+                    specification: it.specification,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated
+            ]
+        }
+        JSON.registerObjectMarshaller(CommodityCategory) {
+            return [
+                    id: it.id,
+                    name: it.name,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated
+            ]
+        }
+        JSON.registerObjectMarshaller(Login) {
+            return [
+                    id: it.id,
+                    type: it.type,
+                    token: it.token,
+                    user: it.user,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated
+            ]
+        }
+        JSON.registerObjectMarshaller(UserRecord) {
+            return [
+                    id: it.id,
+                    content: it.content,
+                    amount: it.amount,
+                    recordType: it.recordType,
+                    user: it.user,
+                    currency: it.currency,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated
+            ]
+        }
+        JSON.registerObjectMarshaller(Order) {
+            return [
+                    id: it.id,
+                    orderNo: it.orderNo,
+                    totalPrice: it.totalPrice,
+                    status: it.status,
+                    payments: it.payments,
+                    items: it.items,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated
+            ]
+        }
+        JSON.registerObjectMarshaller(OrderItem) {
+            return [
+                    id: it.id,
+                    name: it.name,
+                    imageUrl: it.imageUrl,
+                    price: it.price,
+                    buyCount: it.buyCount,
+                    specification: it.specification,
+                    commodity: it.commodity,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated
+            ]
+        }
+        JSON.registerObjectMarshaller(OrderPayment) {
+            return [
+                    id: it.id,
+                    amount: it.amount,
+                    currency: it.currency,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated
+            ]
+        }
         environments {
             development {
                 // 创建一个管理员
@@ -22,6 +150,9 @@ class BootStrap {
 
                 userRecordService.save(new UserRecord(user: martin, recordType: UserRecordType.RECHARGE, amount: 10000, currency: rmb))
                 userRecordService.save(new UserRecord(user: martin, recordType: UserRecordType.RECHARGE, amount: 100000000, currency: zyb))
+                for( int i = 0; i < 100; i ++) {
+                    userRecordService.save(new UserRecord(user: martin, recordType: UserRecordType.RECHARGE, amount: RandomUtils.nextInt(1, 10), currency: rmb))
+                }
 
                 disciplineService.save(new Discipline(name: '数学'))
                 disciplineService.save(new Discipline(name: '语文'))

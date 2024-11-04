@@ -1,5 +1,7 @@
 package family.excitation.service
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+
 class User {
     String name
     String userName
@@ -12,7 +14,7 @@ class User {
     Date dateCreated
     Date lastUpdated
 
-    static hasMany = [logins: Login, records: UserRecord, statisitics:AssetStatistics, scores: Score]
+    static hasMany = [logins: Login, records: UserRecord, statisitics:AssetStatistics, scores: Score, orders: Order]
     static constraints = {
         name maxSize: 30
         userName unique: true, maxSize: 30
@@ -23,6 +25,7 @@ class User {
         records nullable: true
         statisitics nullable: true
         scores nullable: true
+        orders nullable: true
     }
 
     static mapping = {

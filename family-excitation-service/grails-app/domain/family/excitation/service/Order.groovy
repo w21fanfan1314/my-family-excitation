@@ -5,6 +5,7 @@ import org.apache.commons.lang3.RandomUtils
 import java.text.SimpleDateFormat
 
 class Order {
+    static transients = ['payed']
     String orderNo
     Double totalPrice = 0
     OrderStatus status = OrderStatus.WAIT_PAY
@@ -51,7 +52,7 @@ class Order {
     boolean isPayed() {
         if (status != OrderStatus.PAID) {
             def payAmount = payments.sum { it.amount }
-            return totalPrice == payAmount
+            return totalPrice <= payAmount
         }
         return true
     }

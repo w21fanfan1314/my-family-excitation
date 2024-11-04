@@ -17,25 +17,25 @@ class OrderApiController {
         Order order = new Order(user: user, items: json.items, payments: json.payments)
         if (order.validate()) {
             Order result = orderService.save(order)
-            JSON.use('deep') {
-                respond new ApiResult(code: 200,  msg: '订单创建成功', data: result)
-            }
+            respond new ApiResult(code: 200,  msg: '订单创建成功', data: result)
         } else {
             respond new ApiResult(code: 500,  msg: '订单创建失败', data: order.errors)
         }
     }
 
 
-    def listOrders(OrderStatus status, Integer page, Integer size) {
+    def listOrders(String status, Integer page, Integer size) {
         User user = Login.findByToken(request.getHeader('app-token'))?.user
         if (!user) {
             respond new ApiResult(code: 500, msg: '用户不存在')
             return
         }
+
+        OrderStatus orderStatus = status ? OrderStatus.valueOf(status) : null
         def orders = Order.createCriteria().list {
             eq('user', user)
-            if (status) {
-                eq('status', status)
+            if (orderStatus) {
+                eq('status', orderStatus)
             }
             maxResults(size)
             firstResult(page * size)
@@ -44,16 +44,14 @@ class OrderApiController {
 
         def rowCount = Order.createCriteria().get {
             eq('user', user)
-            if (status) {
-                eq('status', status)
+            if (orderStatus) {
+                eq('status', orderStatus)
             }
             projections {
                 rowCount()
             }
         }
-        JSON.use('deep') {
-            respond new ApiResult(code: 200, msg: '获取成功', data: [orders: orders, total:rowCount])
-        }
+        respond new ApiResult(code: 200, msg: '获取成功', data: [orders: orders, total:rowCount])
     }
 
 }

@@ -84,7 +84,7 @@ grails:
         cache:
             maxsize: 1000
     controllers:
-        defaultScope: singleton
+        defaultScope: singleton #singleton
     converters:
         encoding: UTF-8
     views:

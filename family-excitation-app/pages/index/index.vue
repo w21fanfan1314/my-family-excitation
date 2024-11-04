@@ -78,7 +78,7 @@
 import { computed, onMounted, readonly, ref } from 'vue';
 import { useUserStore } from '../../store/user';
 import { queryBalance, queryScore, queryTopAScore } from '../../api/UserApi';
-import { onReady, onPullDownRefresh } from '@dcloudio/uni-app'
+import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import { defaultAvatar } from '../../common/data';
 import { storeToRefs } from 'pinia'
 
@@ -90,7 +90,7 @@ const noticeText = computed(() => noticeData.value?.map(item => (`🎉恭喜${it
 const {loadUserBalance} = user
 const {balanceData} = storeToRefs(user)
 
-onReady(async () => {
+onLoad(async () => {
 	await refreshData()
 })
 

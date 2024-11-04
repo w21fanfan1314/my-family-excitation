@@ -70,9 +70,7 @@ class UserApiController {
                     redirect(uri: '/')
                 }
                 json {
-                    JSON.use('deep') {
-                        respond new ApiResult(code: 200, msg: '登录成功', data: token), formats: ['json']
-                    }
+                    respond new ApiResult(code: 200, msg: '登录成功', data: token)
                 }
             }
         }
@@ -122,9 +120,7 @@ class UserApiController {
             between('dateCreated', timeRange[0], timeRange[1])
         }
         def starCount = scores.findAll { it.score > 85 }.size()
-        JSON.use('deep') {
-            respond new ApiResult(code: 200, msg: '查询成功', data: [scores: scores, starCount: starCount])
-        }
+        respond new ApiResult(code: 200, msg: '查询成功', data: [scores: scores, starCount: starCount])
     }
 
     def queryTopAScore(long time) {
@@ -133,9 +129,7 @@ class UserApiController {
             ge('score', 85)
             between('dateCreated', timeRange[0], timeRange[1])
         }
-        JSON.use('deep') {
-            respond new ApiResult(code: 200, msg: '查询成功', data: scores)
-        }
+        respond new ApiResult(code: 200, msg: '查询成功', data: scores)
     }
 
     def userRecords(User user, Integer page, Integer size) {
@@ -145,9 +139,7 @@ class UserApiController {
             maxResults(size)
             firstResult(page * size)
         }
-        JSON.use('deep') {
-            respond new ApiResult(code: 200, msg: '查询成功', data: [records: records, total: UserRecord.countByUser(user)])
-        }
+        respond new ApiResult(code: 200, msg: '查询成功', data: [records: records, total: UserRecord.countByUser(user)])
     }
 
     private static def timeToRange(long time) {
