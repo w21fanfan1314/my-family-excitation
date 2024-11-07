@@ -137,6 +137,28 @@ class BootStrap {
                     lastUpdated: it.lastUpdated
             ]
         }
+        JSON.registerObjectMarshaller(ReleaseInformation) {
+            return [
+                    id: it.id,
+                    title: it.title,
+                    content: it.content,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated,
+                    mediaDataList: it.mediaDataList,
+                    user: it.user,
+                    category: it.category
+            ]
+        }
+        JSON.registerObjectMarshaller(MediaData) {
+            return [
+                    id: it.id,
+                    name: it.name,
+                    url: it.url,
+                    type: it.type,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated
+            ]
+        }
         environments {
             development {
                 // 创建一个管理员

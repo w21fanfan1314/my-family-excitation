@@ -63,6 +63,14 @@
 			{
 				"navigationBarTitleText" : "订单详情"
 			}
+		},
+		{
+			"path" : "pages/releaseInformation/releaseInformation",
+			"style" : 
+			{
+				"navigationBarTitleText" : "视频",
+				"enablePullDownRefresh": true
+			}
 		}
 	],
 	"globalStyle": {

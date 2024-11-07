@@ -27,13 +27,21 @@
 			  </navigator>
 		  </uni-grid-item>
 		  <uni-grid-item>
+		  	<navigator url="/pages/releaseInformation/releaseInformation">
+		  		<view class="menu-item">
+		  			<uni-icons type="pyq" color="#007aff" :size="24"></uni-icons>
+		  			视频
+		  		</view>	  				  
+		  	</navigator>		  
+		  </uni-grid-item>
+		 <!-- <uni-grid-item>
 			<view class="menu-item">
 				<uni-badge text="10" absolute="leftTop">
 					<uni-icons type="notification-filled" color="#007aff" :size="24"></uni-icons>			
 				</uni-badge>
 				消息
 			</view>	  
-		  </uni-grid-item>
+		  </uni-grid-item> -->
 	  </uni-grid>
     </uni-card>
 
