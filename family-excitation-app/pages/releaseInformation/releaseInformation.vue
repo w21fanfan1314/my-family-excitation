@@ -38,7 +38,7 @@
 		category: '',
 		title: '',
 		page: 0,
-		size: 20
+		size: 10
 	})
 	const listData = ref({
 		list: [],
@@ -46,7 +46,7 @@
 	})
 	const isMore = computed(() => listData.value.list?.length < listData.value.total)
 	const categories = computed(() => [{name: '全部'}, ...(categoriesData.value?.map(item => ({ name: item })) || [])])
-	const { loadMoreStatus, loadMore } = useRefreshData(loadData, isMore)
+	const { loadMoreStatus, loadMore } = useRefreshData(loadData, isMore, formData)
 	
 	onLoad(async() => {
 		await loadCategories()

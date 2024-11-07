@@ -1,7 +1,7 @@
 import { onReachBottom, onPullDownRefresh } from '@dcloudio/uni-app'
 import { ref, computed } from 'vue'
 
-export  function useRefreshData(loadData, isMore) {
+export  function useRefreshData(loadData, isMore, formData) {
 	const loadingMoreData = ref(false)
 	const loadMoreStatus = computed(() => loadingMoreData.value ? 'loading' : isMore.value ? 'more' : 'noMore')
 	

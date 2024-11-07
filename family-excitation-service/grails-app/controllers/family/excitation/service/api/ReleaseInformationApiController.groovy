@@ -82,9 +82,9 @@ class ReleaseInformationApiController {
     }
 
     def categories() {
-        def result = ReleaseInformation.createCriteria().listDistinct {
+        def result = ReleaseInformation.createCriteria().list {
             projections {
-                property('category')
+                groupProperty('category')
             }
         }
         respond new ApiResult(code: 200, msg: '查询成功', data: result)

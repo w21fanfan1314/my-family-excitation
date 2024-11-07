@@ -8,7 +8,8 @@ class ApiAuthInterceptor {
 
     ApiAuthInterceptor() {
         match(controller: /.*?Api/)
-                .except(action: 'login')
+                .except(controler: 'userApi',action: 'login')
+                .except(controler: 'releaseInformationApi',action: 'generateAll')
     }
 
     boolean before() {
