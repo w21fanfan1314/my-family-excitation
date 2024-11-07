@@ -24,16 +24,22 @@ class ReleaseInformationApiController {
                 break
         }
         def rootFile = new File(rootPath)
+        if (!rootFile.exists()) {
+            respond new ApiResult(code: 500, msg: '文件不存在')
+            return
+        }
+        MediaData.findByType(MediaType.VIDEO).each {
+            def releaseInformation = ReleaseInformation.findByTitle(it.name)
+            if (releaseInformation) {
+                releaseInformationService.delete(releaseInformation.id)
+            }
+        }
         rootFile.eachFile { File file ->
             if (file.isDirectory()) {
                 file.eachFile {
                     if (it.name.endsWith('.mp4')) {
-                        def releaseInformation = ReleaseInformation.findByTitleAndCategory(it.name, file.name)
-                        if (releaseInformation) {
-                            releaseInformationService.delete(releaseInformation.id)
-                        }
                         releaseInformationService.save(new ReleaseInformation(title: it.name, category: file.name, user: user , mediaDataList: [
-                                new MediaData(url: "http://47.120.23.110/media_data/${file.name}/${it.name}", type: MediaType.VIDEO)
+                                new MediaData(url: "http://47.120.23.110/media_data/${file.name}/${it.name}", name: it.name, type: MediaType.VIDEO)
                         ]))
                     }
                 }

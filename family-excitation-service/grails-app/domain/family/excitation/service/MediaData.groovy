@@ -19,12 +19,8 @@ class MediaData {
     }
     def beforeInsert() {
         if (!name) {
-            if (releaseInformation) {
-                name = releaseInformation.title
-            } else {
-                def lastName = url.split('/').last()
-                name = lastName.length() > 80 ? lastName.substring(0, 80) : lastName
-            }
+            def lastName = url.split('/').last()
+            name = lastName.length() > 80 ? lastName.substring(0, 80) : lastName
         }
     }
 
