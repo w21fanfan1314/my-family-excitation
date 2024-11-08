@@ -146,3 +146,13 @@ environments:
                 testOnReturn: false
                 jdbcInterceptors: ConnectionState
                 defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+---
+environments:
+    development:
+        familyExcitation:
+            upload:
+                path: D:\\Downloads\\uploads
+    production:
+        familyExcitation:
+            upload:
+                path: /www/wwwroot/47.120.23.110/uploads

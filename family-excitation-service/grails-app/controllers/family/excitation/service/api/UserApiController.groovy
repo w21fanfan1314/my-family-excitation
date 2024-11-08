@@ -2,11 +2,15 @@ package family.excitation.service.api
 
 import family.excitation.service.Login
 import family.excitation.service.Currency
+import family.excitation.service.MediaData
+import family.excitation.service.MediaDataService
 import family.excitation.service.Score
+import family.excitation.service.UserGender
 import family.excitation.service.UserRecord
 import family.excitation.service.LoginService
 import family.excitation.service.LoginType
 import family.excitation.service.User
+import family.excitation.service.UserService
 import grails.converters.JSON
 
 import java.time.Instant
@@ -14,11 +18,15 @@ import java.time.ZoneId
 import java.time.temporal.ChronoField
 
 class UserApiController {
-    static allowedMethods = [login: ['GET', 'POST']]
+    static allowedMethods = [login: ['GET', 'POST'], update: 'POST', updatePwd: 'POST']
 
     LoginService loginService
+    UserService userService
+    MediaDataService mediaDataService
 
-    def index() { }
+    def show(User user) {
+        respond new ApiResult(code: 200, msg: '查询成功', data: user)
+    }
 
     def login() {
         if (request.isPost()) {
@@ -74,6 +82,65 @@ class UserApiController {
                 }
             }
         }
+    }
+
+    def updatePwd() {
+        def json = request.JSON
+        if (!json.userId) {
+            respond new ApiResult(code: 400, msg: '用户不存在')
+            return
+        }
+        def user = User.findByIdAndPassword(json.userId, json.password)
+        if (!user) {
+            respond new ApiResult(code: 400, msg: '原始密码不正确')
+            return
+        }
+
+        if(!json.newPassword) {
+            respond new ApiResult(code: 400, msg: '新密码不能为空')
+            return
+        }
+
+        user.password = json.newPassword
+        def result = userService.save(user)
+        respond new ApiResult(code: 200, msg: '修改成功', data: result)
+    }
+
+    // 更新用户信息
+    def update() {
+        def json = request.JSON
+        if (!json.userId) {
+            respond new ApiResult(code: 400, msg: '用户不存在')
+            return
+        }
+        def user = User.get(json.userId)
+        if (!user) {
+            respond new ApiResult(code: 400, msg: '用户不存在')
+            return
+        }
+        if (json.name && !json.name.blank) {
+            user.name = json.name
+        }
+        if (json.gender && !json.gender.blank) {
+            user.gender = UserGender.valueOf(json.gender)
+        }
+        user.birthday = new Date(json.birthday)
+
+        def avatar = MediaData.findByUrlAndUser(user.avatar, user)
+        if (avatar) {
+            mediaDataService.delete(avatar.id)
+        }
+
+        if (json.avatar) {
+            avatar = MediaData.findByUrl(json.avatar)
+            if (avatar) {
+                avatar.user = user
+                mediaDataService.save(avatar)
+            }
+        }
+        user.avatar = json.avatar
+        def result = userService.save(user)
+        respond new ApiResult(code: 200, msg: '更新成功', data: result)
     }
 
     def quit() {

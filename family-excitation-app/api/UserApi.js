@@ -43,3 +43,25 @@ export async function userRecords(data) {
 		data
 	})
 }
+
+export async function queryUserInfo(data) {
+	return request({
+		url: '/userApi/show.json?user.id=' + data.userId
+	})
+}
+
+export async function updateUserInfo(data) {
+	return request({
+		url: '/userApi/update.json',
+		method: 'POST',
+		data
+	})
+}
+
+export async function updatePassword(data) {
+	return request({
+		url: '/userApi/updatePwd.json',
+		method: 'POST',
+		data
+	})
+}

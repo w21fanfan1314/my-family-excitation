@@ -31,7 +31,8 @@
 			"path" : "pages/user/user",
 			"style" : 
 			{
-				"navigationBarTitleText" : ""
+				"navigationBarTitleText" : "用户中心",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -70,6 +71,13 @@
 			{
 				"navigationBarTitleText" : "视频",
 				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path" : "pages/user/edit",
+			"style" : 
+			{
+				"navigationBarTitleText" : "编辑信息"
 			}
 		}
 	],

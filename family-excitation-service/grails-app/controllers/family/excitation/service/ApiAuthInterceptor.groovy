@@ -10,6 +10,7 @@ class ApiAuthInterceptor {
         match(controller: /.*?Api/)
                 .except(controler: 'userApi',action: 'login')
                 .except(controler: 'releaseInformationApi',action: 'generateAll')
+                .except(controler: 'mediaDataApi',action: 'show')
     }
 
     boolean before() {

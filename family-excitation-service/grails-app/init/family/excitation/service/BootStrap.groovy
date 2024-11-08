@@ -155,6 +155,7 @@ class BootStrap {
                     name: it.name,
                     url: it.url,
                     type: it.type,
+                    contentType: it.contentType,
                     dateCreated: it.dateCreated,
                     lastUpdated: it.lastUpdated
             ]
@@ -164,7 +165,7 @@ class BootStrap {
                 // 创建一个管理员
                 userService.save(new User(name: 'admin', userName: 'admin', password: 'asdf.1234', role: UserRole.ADMIN, position: UserPosition.PARENT))
                 userService.save(new User(name: '刘泯铄', userName: 'marvin', password: '123456', role: UserRole.USER, position: UserPosition.CHILD))
-                def martin = userService.save(new User(name: '王泯泽', userName: 'martin', password: '123456', role: UserRole.USER, position: UserPosition.CHILD))
+                def martin = userService.save(new User(name: '王泯泽', userName: 'martin', password: '123456', role: UserRole.USER, position: UserPosition.CHILD, birthday: new Date(115, 6, 10)))
 
 
                 def rmb = currencyService.save(new Currency(name: '人民币', symbol: '¥'))

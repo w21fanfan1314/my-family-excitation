@@ -2,13 +2,15 @@
   <view class="index-container">
     <uni-notice-bar single scrollable showIcon :text="noticeText" :speed="20"></uni-notice-bar>
     <uni-card>
-      <view class="user-info">
-        <image class="user-avatar" :src="user.userInfo?.avatar || defaultAvatar"></image>
-        <view class="info-container">
-          <text>{{user.userInfo?.name}}</text>
-          <uni-rate :max="starCount" :value="starCount" :readonly="true"></uni-rate>
-        </view>
-      </view>
+     <navigator url="/pages/user/user">
+		 <view class="user-info">
+		   <image class="user-avatar" :src="user.userInfo?.avatar || defaultAvatar"></image>
+		   <view class="info-container">
+		     <text>{{user.userInfo?.name}}</text>
+		     <uni-rate :max="starCount" :value="starCount" :readonly="true"></uni-rate>
+		   </view>
+		 </view>
+	 </navigator>
 	  <uni-grid :column="3" :show-border="false" :square="false" class="menu-list">
 		  <uni-grid-item>
 			  <navigator url="/pages/shopping/shopping">

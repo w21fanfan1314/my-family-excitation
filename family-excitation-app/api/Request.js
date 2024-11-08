@@ -24,3 +24,26 @@ export async function request(options) {
         })
     })
 }
+
+export async function uploadFile({url, name, fileType}) {
+	return new Promise(resolve => {
+        const user = useUserStore()
+		uni.uploadFile({
+			url: apiBaseUrl + '/mediaDataApi/upload.json',
+			name: name || 'file',
+			fileType: fileType || 'image',
+			filePath: url,
+			header: {
+				 'app-token': user.token || ''
+			},
+			success(res) {
+				console.log('上传文件返回', res)
+				resolve(JSON.parse(res.data))
+			},
+			fail(err) {
+				console.log('上传文件错误', res)
+				resolve({code: 500, msg: '请求错误', data: err})
+			}
+		})
+	})
+}
