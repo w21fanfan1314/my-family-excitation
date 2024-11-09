@@ -50,6 +50,12 @@ class MediaData {
         }
     }
 
+    def afterDelete() {
+        if (localPath) {
+            new File(localPath).delete()
+        }
+    }
+
     private void updateContentType() {
         if (localPath) {
             def contentType = URLConnection.guessContentTypeFromName(localPath)

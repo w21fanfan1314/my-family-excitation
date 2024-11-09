@@ -19,4 +19,8 @@ class MediaDataApiController {
         def result = uploadService.upload(request.getFile('file'))
         respond result
     }
+
+    private String getCurrentUrl() {
+        "${request.scheme}://${request.serverName}:${request.serverPort}${request.contextPath}"
+    }
 }
