@@ -101,6 +101,12 @@ class UserApiController {
             return
         }
 
+        if(json.newPassword.length() < 6) {
+            respond new ApiResult(code: 400, msg: '新密码必须大于等于6为')
+            return
+        }
+
+
         user.password = json.newPassword
         def result = userService.save(user)
         respond new ApiResult(code: 200, msg: '修改成功', data: result)

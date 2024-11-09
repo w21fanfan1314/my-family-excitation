@@ -39,14 +39,15 @@
 			</tui-list-view>
 		</uni-section>
 		<view class="order-bottom">
-			<tui-button type="primary" :disabled="!isCanPay" @click="createNewOrder" :prevent-click="true">立即下单</tui-button>
+			<tui-button type="primary" :disabled="!isCanPay" @click="onPay" :prevent-click="true">立即下单</tui-button>
 		</view>
 	</view>
 	<uni-popup ref="successModal" type="dialog">
 		<uni-popup-dialog mode="base" type="success" 
 			title="提示" content="下单成功" :show-close="true" 
-			confirm-text="查看详情" cancel-text="返回" @confirm="onConfirmGoOrder" @close="onCloseGoShopping"></uni-popup-dialog>
+			confirm-text="查看" cancel-text="返回" @confirm="onConfirmGoOrder" @close="onCloseGoShopping"></uni-popup-dialog>
 	</uni-popup>
+	<pay-modal ref="payModal" :amount="totalDesc" @correct="createNewOrder"></pay-modal>
 </template>
 
 <script setup>
@@ -56,8 +57,11 @@
 	import { queryBalance } from '../../api/UserApi';
 	import { useUserStore } from '../../store/user';
 	import { storeToRefs } from 'pinia'
+	import PayModal from '../order/components/pay-modal.vue';
+	
 	
 	const successModal = ref()
+	const payModal = ref()
 	const commoditiesData = ref([])
 	const currenciesData = ref([])
 	const user = useUserStore()
@@ -110,7 +114,7 @@
 	
 	function onConfirmGoOrder() {
 		uni.redirectTo({
-			url: '/pages/order/detail',
+			url: '/pages/order/order',
 			success(res) {
 				res.eventChannel.emit("orderData", orderData.value)
 			}
@@ -123,6 +127,10 @@
 	
 	function onBuyCountChange(e, commodity) {
 		commodity.buyCount = e.value
+	}
+	
+	function onPay() {
+		payModal.value?.open()
 	}
 	
 	

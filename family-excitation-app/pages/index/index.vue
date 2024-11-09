@@ -1,30 +1,22 @@
 <template>
   <view class="index-container">
-    <uni-notice-bar single scrollable showIcon :text="noticeText" :speed="20"></uni-notice-bar>
+    <uv-notice-bar v-if="noticeText?.length > 0" icon="volume-fill" :text="noticeText" direction="column"></uv-notice-bar>
     <uni-card>
      <navigator url="/pages/user/user">
 		 <view class="user-info">
-		   <image class="user-avatar" :src="user.userInfo?.avatar || defaultAvatar"></image>
+		   <uv-avatar :size="60" :src="user.userInfo?.avatar || defaultAvatar"></uv-avatar>
 		   <view class="info-container">
 		     <text>{{user.userInfo?.name}}</text>
 		     <uni-rate :max="starCount" :value="starCount" :readonly="true"></uni-rate>
 		   </view>
 		 </view>
 	 </navigator>
-	  <uni-grid :column="3" :show-border="false" :square="false" class="menu-list">
+	  <uni-grid :column="2" :show-border="false" :square="false" class="menu-list">
 		  <uni-grid-item>
 			  <navigator url="/pages/shopping/shopping">
 				  <view class="menu-item">
 				  	<uni-icons type="shop-filled" color="#007aff" :size="24"></uni-icons>
 				  	商城
-				  </view>
-			  </navigator>
-		  </uni-grid-item>
-		  <uni-grid-item>
-			  <navigator url="/pages/order/order">
-				  <view class="menu-item">
-				  	<uni-icons type="cart-filled" color="#007aff" :size="24"></uni-icons>
-				  	订单
 				  </view>
 			  </navigator>
 		  </uni-grid-item>
@@ -80,7 +72,6 @@
 		  <uni-list-item title="3 作业不认真对待,写字不公正等需要处罚" note="处罚1: 订正内容每个部分写一篇"></uni-list-item>
 	  </uni-list>
     </uni-section>
-    <button type="error" style="width: 690rpx; margin-top: 80rpx; margin-bottom: 30rpx;" @click="onQuit">退出登录</button>
   </view>
 </template>
 
@@ -96,7 +87,7 @@ const user = useUserStore()
 const scoreData = ref({starCount: 0, scores: []})
 const noticeData = ref([])
 const starCount = computed(() =>  scoreData.value?.starCount || 0)
-const noticeText = computed(() => noticeData.value?.map(item => (`🎉恭喜${item.user.name}同学的${item.discipline.name}获得${item.level}🎉`)).join('\t\t\t\t\t\t'))
+const noticeText = computed(() => noticeData.value?.map(item => (`🎉恭喜${item.user.name}同学的${item.discipline.name}获得${item.level}🎉`)))
 const {loadUserBalance} = user
 const {balanceData} = storeToRefs(user)
 
@@ -160,41 +151,6 @@ async function loadNotice() {
 	}
 }
 
-async function onQuit() {
-	uni.showModal({
-		title: '提示',
-		content: '是否退出登录',
-		confirmText: '退出登录',
-		showCancel:true,
-		async success(res) {
-			if (res.confirm) {
-				uni.showLoading({
-					title: '退出中...'
-				})
-				try {
-					const res = await user.userQuit()
-					if (res.code === 200) {
-						uni.redirectTo({
-							url: '/pages/login/login'
-						})
-					} else {
-						uni.showToast({
-							icon: 'none',
-							title: res.msg
-						})
-					}
-				} catch(err) {
-					uni.showToast({
-						icon: 'none',
-						title: '退出登录错误'
-					})
-				} finally {
-					uni.hideLoading()
-				}
-			}
-		}
-	})
-}
 </script>
 
 <style scoped lang="scss">
@@ -212,7 +168,6 @@ async function onQuit() {
       display: flex;
       flex-direction: row;
       align-items: center;
-      height: 100rpx;
       width: 100%;
       
       .user-avatar {
