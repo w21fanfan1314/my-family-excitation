@@ -11,7 +11,7 @@
 		   </view>
 		 </view>
 	 </navigator>
-	  <uni-grid :column="2" :show-border="false" :square="false" class="menu-list">
+	  <uni-grid :column="3" :show-border="false" :square="false" class="menu-list">
 		  <uni-grid-item>
 			  <navigator url="/pages/shopping/shopping">
 				  <view class="menu-item">
@@ -28,14 +28,14 @@
 		  		</view>	  				  
 		  	</navigator>		  
 		  </uni-grid-item>
-		 <!-- <uni-grid-item>
-			<view class="menu-item">
-				<uni-badge text="10" absolute="leftTop">
-					<uni-icons type="notification-filled" color="#007aff" :size="24"></uni-icons>			
-				</uni-badge>
-				消息
-			</view>	  
-		  </uni-grid-item> -->
+		 <uni-grid-item>
+			<navigator url="/pages/train/train">
+				<view class="menu-item">
+					<uni-icons type="hand-up-filled" color="#007aff" :size="24"></uni-icons>
+					闯关
+				</view>
+			</navigator>	 
+		  </uni-grid-item>
 	  </uni-grid>
     </uni-card>
 

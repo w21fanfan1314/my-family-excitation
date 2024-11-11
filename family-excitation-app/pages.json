@@ -88,6 +88,14 @@
 				"navigationBarBackgroundColor": "#000000",
 				"navigationBarTextStyle": "white"
 			}
+		},
+		{
+			"path" : "pages/train/train",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {
