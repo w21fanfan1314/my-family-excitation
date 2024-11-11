@@ -5,15 +5,15 @@
 				<text class="title">修改密码</text>
 				<uni-icons type="clear" :size="30" @click="close"></uni-icons>
 			</view>
-			<uni-forms class="uni-mt-10">
+			<uni-forms class="uni-mt-10" v-model="formData">
 				<uni-forms-item label="原密码">
-					<uni-easyinput type="text"></uni-easyinput>
+					<uni-easyinput type="text" v-model="formData.password"></uni-easyinput>
 				</uni-forms-item>
 				<uni-forms-item label="新密码">
-					<uni-easyinput type="text"></uni-easyinput>
+					<uni-easyinput type="text" v-model="formData.newPassword" ></uni-easyinput>
 				</uni-forms-item>
 				<view class="uni-mt-10">
-					<tui-button type="danger">确认修改</tui-button>
+					<tui-button type="danger" @click="onPasswordChange">确认修改</tui-button>
 				</view>
 			</uni-forms>
 		</view>
@@ -22,11 +22,48 @@
 
 <script setup>
 	import { ref, defineExpose } from 'vue';
+	import { useUserStore } from '../../../store/user';
+	
+	const user = useUserStore()
 	const popup = ref()
+	const formData = ref({
+		password: '',
+		newPassword: '',
+		userId: ''
+	})
 	
 	function close() {
 		popup.value?.close()
 	}
+	
+	async function onPasswordChange() {
+		uni.showLoading({
+			title: '修改中...'
+		})
+		try {
+			const res = await user.userUpdatePwd(formData.value)
+			if (res.code === 200) {
+				uni.showToast({
+					icon: 'success',
+					title: '修改成功'
+				})
+				close()
+			} else {
+				uni.showToast({
+					icon: 'none',
+					title: res.msg
+				})
+			}
+		} catch(err) {
+			uni.showToast({
+				icon: 'none',
+				title: '修改密码错误'
+			})
+		} finally {
+			uni.hideLoading()
+		}
+	}
+	
 	defineExpose({
 		open() {
 			popup.value?.open()

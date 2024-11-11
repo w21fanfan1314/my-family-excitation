@@ -14,3 +14,10 @@ export async function listOrders(data) {
 		data
 	})
 }
+
+export async function checkPayPassword(data) {
+	return request({
+		url: '/orderApi/checkPayPassword.json',
+		data
+	})
+}

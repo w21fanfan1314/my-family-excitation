@@ -54,4 +54,12 @@ class OrderApiController {
         respond new ApiResult(code: 200, msg: '获取成功', data: [orders: orders, total:rowCount])
     }
 
+    def checkPayPassword(User user, String password) {
+        if (user?.password == password) {
+            respond new ApiResult(code: 200, msg: '密码正确')
+        } else {
+            respond new ApiResult(code: 500, msg: '密码错误')
+        }
+    }
+
 }

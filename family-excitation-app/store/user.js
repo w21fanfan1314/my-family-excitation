@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { checkAuthValid, login, queryBalance, queryUserInfo, quit, updateUserInfo } from "../api/UserApi";
+import { checkAuthValid, login, queryBalance, queryUserInfo, quit, updatePassword, updateUserInfo } from "../api/UserApi";
 
 const LOGIN_INFO_KEY = "LOGIN_INFO_KEY"
 	
@@ -23,6 +23,17 @@ export const useUserStore = defineStore('user', () => {
 			}
         }
     })
+	
+	async function userUpdatePwd(params) {
+		if (!params.userId) {
+			params.userId = this.userInfo.id
+		}
+	    const res = await updatePassword(params)
+	    if (res?.code === 200) {
+			await userDetail({userId: this.userInfo.id})
+	    }
+		return res
+	}
 	
 	async function userUpdate(params) {
 	    const res = await updateUserInfo(params)
@@ -87,6 +98,7 @@ export const useUserStore = defineStore('user', () => {
 		loadUserBalance,
 		balanceData,
 		userDetail,
-		userUpdate
+		userUpdate,
+		userUpdatePwd
     }
 })

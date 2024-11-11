@@ -14,13 +14,13 @@
 					</view>
 				</view>
 			</tui-list-cell>
-			<tui-list-cell :arrow="true">
+			<tui-list-cell :arrow="true" @click="onGoOrder">
 				<uv-icon name="order" color="primary" size="20px" label="我的订单"></uv-icon>
 			</tui-list-cell>
 			<tui-list-cell :arrow="true" @click="onUpdatePwdClick">
 				<uv-icon name="setting-fill" color="primary" size="20px" label="设置密码"></uv-icon>
 			</tui-list-cell>
-			<tui-list-cell :arrow="true">
+			<tui-list-cell :arrow="true" @click="onQuit">
 				<uv-icon name="close-circle-fill" color="error" size="20px" label="退出登录"></uv-icon>
 			</tui-list-cell>
 		</tui-list-view>
@@ -78,6 +78,12 @@
 		})
 	}
 	
+	function onGoOrder() {
+		uni.navigateTo({
+			url: '/pages/order/order'
+		})
+	}
+	
 	async function loadData(showLoading = true) {
 		if (showLoading) {
 			uni.showLoading({
@@ -103,6 +109,42 @@
 				uni.hideLoading()
 			}
 		}
+	}
+	
+	async function onQuit() {
+		uni.showModal({
+			title: '提示',
+			content: '是否退出登录',
+			confirmText: '退出登录',
+			showCancel:true,
+			async success(res) {
+				if (res.confirm) {
+					uni.showLoading({
+						title: '退出中...'
+					})
+					try {
+						const res = await user.userQuit()
+						if (res.code === 200) {
+							uni.redirectTo({
+								url: '/pages/login/login'
+							})
+						} else {
+							uni.showToast({
+								icon: 'none',
+								title: res.msg
+							})
+						}
+					} catch(err) {
+						uni.showToast({
+							icon: 'none',
+							title: '退出登录错误'
+						})
+					} finally {
+						uni.hideLoading()
+					}
+				}
+			}
+		})
 	}
 	
 </script>
