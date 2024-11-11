@@ -2,15 +2,19 @@ package family.excitation.service.api
 
 import family.excitation.service.Login
 import family.excitation.service.MediaData
+import family.excitation.service.MediaDataService
 import family.excitation.service.MediaType
 import family.excitation.service.ReleaseInformation
 import family.excitation.service.ReleaseInformationService
 import family.excitation.service.User
 import family.excitation.service.VideoUtilsWithJavaCV
 import grails.util.Environment
+import grails.web.mapping.LinkGenerator
 
 class ReleaseInformationApiController {
     ReleaseInformationService releaseInformationService
+    MediaDataService mediaDataService
+    LinkGenerator grailsLinkGenerator
     def generateAll() {
         User user
         def rootPath = ''
@@ -44,7 +48,9 @@ class ReleaseInformationApiController {
                         ]
                         def thumbnailPath = VideoUtilsWithJavaCV.getVideoCover(it.path, it.path + '.jpg')?.absolutePath
                         if (thumbnailPath) {
-                            mediaDataList.add(new MediaData(localPath: thumbnailPath, name: it.name, type: MediaType.COVER))
+                            def thumbnail = mediaDataService.save(new MediaData(localPath: thumbnailPath, name: it.name, type: MediaType.COVER))
+                            thumbnail.url = grailsLinkGenerator.link(controller: 'mediaDataApi', action: 'show', params: [id: thumbnail.id], absolute: true)
+                            mediaDataList << thumbnail
                         }
                         releaseInformationService.save(new ReleaseInformation(title: it.name, category: file.name, user: user , mediaDataList: mediaDataList))
                     }

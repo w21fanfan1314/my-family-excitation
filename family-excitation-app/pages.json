@@ -79,6 +79,15 @@
 			{
 				"navigationBarTitleText" : "编辑信息"
 			}
+		},
+		{
+			"path" : "pages/releaseInformation/videoPlay",
+			"style" : 
+			{
+				"navigationBarTitleText" : "视频播放",
+				"navigationBarBackgroundColor": "#000000",
+				"navigationBarTextStyle": "white"
+			}
 		}
 	],
 	"globalStyle": {

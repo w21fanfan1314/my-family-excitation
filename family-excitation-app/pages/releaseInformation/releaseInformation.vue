@@ -1,12 +1,20 @@
 <template>
 	<view class="release-information-container">
-		<uv-tabs :list="categories" @change="handleTabChange"></uv-tabs>
+		<uv-sticky bg-color="#ffffff">
+			<uv-tabs :list="categories" @change="handleTabChange"></uv-tabs>
+		</uv-sticky>
 		<tui-list-view v-if="listData.list?.length > 0">
-			<tui-list-cell v-for="item in listData.list" :key="'release-information-item-' + item.id" :hover="false">
+			<tui-list-cell v-for="item in listData.list" :key="'release-information-item-' + item.id" @click="onItemClick(item)" >
 				<view class="media-item">
-					<view v-for="media in item.mediaDataList" :key="'media-item-'+ media.id">
-						<image v-if="media.type.name === 'COVER'" :src="media.url" style="width: 100%;" ></image>
+					<view class="thumbnail-container">
+						<uv-image :src="item.thumbnail?.url" width="100%" height="100%" :radius="6"></uv-image>
+						<view class="play-btn">
+							<uv-icon name="play-circle-fill" color="primary" :size="80"></uv-icon>
+						</view>
 					</view>
+					<!-- <view v-for="media in item.mediaDataList" :key="'media-item-'+ media.id">
+					
+					</view> -->
 					<text class="uni-mt-4">
 						<tui-tag type="green" padding="10rpx 20rpx" size="26rpx" shape="circleLeft" v-if="item.category">{{item.category}}</tui-tag>
 						{{item.title}}
@@ -56,6 +64,21 @@
 	async function handleTabChange(e) {
 		formData.value.category = e.index == 0 ? '' : categoriesData.value[e.index - 1]
 		await loadData()
+	}
+	
+	function onItemClick(item) {
+		console.log(item.mediaDataList)
+		if (item.mediaDataList?.length > 0) {
+			const videoMediaData = item.mediaDataList.find(media => media.type?.name === 'VIDEO')
+			if (videoMediaData) {
+				uni.navigateTo({
+					url: '/pages/releaseInformation/videoPlay',
+					success(res) {
+						res.eventChannel.emit("mediaData", {data: videoMediaData, thumbnail: item.thumbnail?.url || ''})
+					}
+				})
+			}
+		}
 	}
 	
 	
@@ -131,6 +154,25 @@
 			flex-direction: column;
 			font-size: 26rpx;
 			color: $uni-text-color;
+			
+			.thumbnail-container {
+				$thumbnail-height: 350rpx;
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+				height: $thumbnail-height;
+				
+				.play-btn {
+					position: absolute;
+					width: 690rpx;
+					height: $thumbnail-height;
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: center;
+					top: 0;
+				}
+			}
 			
 			.tags {
 				display: flex;
