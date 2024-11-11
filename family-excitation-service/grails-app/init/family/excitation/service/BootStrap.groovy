@@ -145,6 +145,7 @@ class BootStrap {
                     dateCreated: it.dateCreated,
                     lastUpdated: it.lastUpdated,
                     mediaDataList: it.mediaDataList,
+                    thumbnail: it.thumbnail,
                     user: it.user,
                     category: it.category
             ]

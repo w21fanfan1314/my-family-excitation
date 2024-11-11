@@ -80,7 +80,9 @@ enum MediaType {
     // 图片
     IMAGE,
     // 视频
-    VIDEO
+    VIDEO,
+    // 封面
+    COVER
 
     @Override
     String toString() {
@@ -89,6 +91,8 @@ enum MediaType {
                 return '图片'
             case VIDEO:
                 return '视频'
+            case COVER:
+                return '封面'
             default:
                 return '未知'
         }

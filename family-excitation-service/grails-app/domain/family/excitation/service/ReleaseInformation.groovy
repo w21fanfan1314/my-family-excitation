@@ -1,6 +1,7 @@
 package family.excitation.service
 
 class ReleaseInformation {
+    static transients = ['getThumbnail']
     String title
     String content
     String category
@@ -18,6 +19,10 @@ class ReleaseInformation {
     static mapping = {
         sort 'dateCreated'
         order 'desc'
+    }
+
+    def getThumbnail() {
+        mediaDataList?.find { it.type == MediaType.COVER }
     }
 
     String toString() {

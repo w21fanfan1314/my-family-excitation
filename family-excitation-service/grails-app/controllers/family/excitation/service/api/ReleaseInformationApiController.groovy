@@ -6,6 +6,7 @@ import family.excitation.service.MediaType
 import family.excitation.service.ReleaseInformation
 import family.excitation.service.ReleaseInformationService
 import family.excitation.service.User
+import family.excitation.service.VideoUtilsWithJavaCV
 import grails.util.Environment
 
 class ReleaseInformationApiController {
@@ -38,9 +39,14 @@ class ReleaseInformationApiController {
             if (file.isDirectory()) {
                 file.eachFile {
                     if (it.name.endsWith('.mp4')) {
-                        releaseInformationService.save(new ReleaseInformation(title: it.name, category: file.name, user: user , mediaDataList: [
+                        def mediaDataList = [
                                 new MediaData(url: "http://47.120.23.110/media_data/${file.name}/${it.name}", name: it.name, type: MediaType.VIDEO)
-                        ]))
+                        ]
+                        def thumbnailPath = VideoUtilsWithJavaCV.getVideoCover(it.path, it.path + '.jpg')?.absolutePath
+                        if (thumbnailPath) {
+                            mediaDataList.add(new MediaData(localPath: thumbnailPath, name: it.name, type: MediaType.COVER))
+                        }
+                        releaseInformationService.save(new ReleaseInformation(title: it.name, category: file.name, user: user , mediaDataList: mediaDataList))
                     }
                 }
             }

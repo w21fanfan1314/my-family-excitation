@@ -5,7 +5,7 @@
 			<tui-list-cell v-for="item in listData.list" :key="'release-information-item-' + item.id" :hover="false">
 				<view class="media-item">
 					<view v-for="media in item.mediaDataList" :key="'media-item-'+ media.id">
-						<video v-if="media.type.name === 'VIDEO'" :src="media.url" style="width: 100%;" :title="media.name"></video>
+						<image v-if="media.type.name === 'COVER'" :src="media.url" style="width: 100%;" ></image>
 					</view>
 					<text class="uni-mt-4">
 						<tui-tag type="green" padding="10rpx 20rpx" size="26rpx" shape="circleLeft" v-if="item.category">{{item.category}}</tui-tag>
