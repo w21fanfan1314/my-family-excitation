@@ -7,4 +7,8 @@ class TrainApiController {
     def list() {
         respond new ApiResult(code: 200, msg: '查询成功', data: Train.findAll())
     }
+
+    def levels(Train train) {
+        respond new ApiResult(code: 200, msg: '查询成功', data: train.levels)
+    }
 }
