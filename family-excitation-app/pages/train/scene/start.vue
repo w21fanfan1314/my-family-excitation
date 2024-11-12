@@ -2,7 +2,8 @@
 	<view class="train-start">
 		<text class="title uni-mb-10">一起来挑战吧</text>
 		
-		<train-button class="train-item" v-for="(item, index) in trainsData" :class="{'top0': index === 0}" :key="'train-item-' + item.id">
+		<train-button class="train-item" v-for="(item, index) in trainsData" 
+			:class="{'top0': index === 0}" :key="'train-item-' + item.id" @click="onItemClick(item)">
 			{{item.name}}
 		</train-button>
 		<train-button class="back-item" @onClick="onBack">
@@ -24,33 +25,14 @@
 	})
 	
 	function onBack() {
-		emit('onStart')
 		uni.navigateBack()
 	}
 	
-	async function loadTrains() {
-		uni.showLoading({
-			title: '查询中...'
-		})
-		try {
-			const res = await trains()
-			if (res.code === 200) {
-				trainsData.value = res.data
-			} else {
-				uni.showToast({
-					icon: 'none',
-					title: res.msg
-				})
-			}
-		} catch(err) {
-			uni.showToast({
-				icon: 'none',
-				title: '查询订单列表错误'
-			})
-		} finally {
-			uni.hideLoading()
-		}
+	function onItemClick(item) {
+		emit('onStart', {item})
 	}
+	
+	
 </script>
 
 <style scoped lang="scss">

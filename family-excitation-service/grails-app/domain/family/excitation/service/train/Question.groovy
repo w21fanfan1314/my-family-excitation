@@ -10,6 +10,7 @@ class Question {
     Date lastUpdated
 
     static transients = ['rightOption']
+    static belongsTo = [level: TrainLevel]
     static hasMany = [meidaDataList: MediaData, options: QuestionOption, userAnswers: UserAnswer]
     static constraints = {
         content maxSize: 1000
@@ -17,6 +18,7 @@ class Question {
         meidaDataList nullable: true
         options nullable: true
         userAnswers nullable: true
+        level nullable: true
     }
     static mapping = {
         sort 'dateCreated'

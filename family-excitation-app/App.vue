@@ -21,4 +21,8 @@
 		font-family: 'hanyizhuziguozhiruantang';
 		src: url('~@/static/fonts/hanyizhuziguozhiruantang.ttf') format('truetype');
 	}
+	
+	page {
+		font-family: hanyizhuziguozhiruantang;
+	}
 </style>

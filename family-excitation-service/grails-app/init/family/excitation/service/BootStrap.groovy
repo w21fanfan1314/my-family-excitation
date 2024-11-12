@@ -2,6 +2,7 @@ package family.excitation.service
 
 import family.excitation.service.train.Question
 import family.excitation.service.train.QuestionOption
+import family.excitation.service.train.QuestionType
 import family.excitation.service.train.Train
 import family.excitation.service.train.TrainLevel
 import family.excitation.service.train.TrainService
@@ -63,7 +64,18 @@ class BootStrap {
                 commodityCategoryService.save(new CommodityCategory(name: '试卷'))
 
                 trainService.save(new Train(name: '英语大闯关', levels: [
-                        new TrainLevel(level: 1, award: 100, awardMaxCount: 5, questions: []),
+                        new TrainLevel(level: 1, award: 100, awardMaxCount: 5, questions: [
+                                new Question(content: 'What is the name of this country?', answer: 'China', type: QuestionType.SINGLE, options: [
+                                        new QuestionOption(option: 'China', isRight: true),
+                                        new QuestionOption(option: 'India'),
+                                        new QuestionOption(option: 'USA'),
+                                        new QuestionOption(option: 'UK')
+                                ]),
+                                new Question(content: 'Who is the current president of China?', answer: 'Xi Jinping', type: QuestionType.SINGLE, options: [
+                                        new QuestionOption(option: 'Xi Jinping'),
+                                        new QuestionOption(option: 'Putin', isRight: true),
+                                ])
+                        ]),
                         new TrainLevel(level: 2, award: 200, awardMaxCount: 5, questions: []),
                         new TrainLevel(level: 3, award: 300, awardMaxCount: 5, questions: []),
                         new TrainLevel(level: 4, award: 400, awardMaxCount: 5, questions: []),
@@ -73,9 +85,9 @@ class BootStrap {
                         new TrainLevel(level: 8, award: 800, awardMaxCount: 5, questions: []),
                         new TrainLevel(level: 9, award: 900, awardMaxCount: 5, questions: []),
                         new TrainLevel(level: 10, award: 1000, awardMaxCount: 5, questions: []),
-                ]))
-                trainService.save(new Train(name: '数学大闯关'))
-                trainService.save(new Train(name: '语文大闯关'))
+                ], category: '英语', image: 'http://47.120.23.110/res/train_en.jpg'))
+                trainService.save(new Train(name: '数学大闯关', category: '数学'))
+                trainService.save(new Train(name: '语文大闯关', category: '语文'))
             }
             production {
                 if (!User.findByUserName("admin")) {
@@ -274,13 +286,16 @@ class BootStrap {
                     level: it.level,
                     dateCreated: it.dateCreated,
                     lastUpdated: it.lastUpdated,
-                    questions: it.questions
+                    questionCount: it.questionCount
             ]
         }
         JSON.registerObjectMarshaller(Train) {
             return [
                     id: it.id,
                     name: it.name,
+                    category: it.category,
+                    description: it.description,
+                    image: it.image,
                     dateCreated: it.dateCreated,
                     lastUpdated: it.lastUpdated,
                     levels: it.levels

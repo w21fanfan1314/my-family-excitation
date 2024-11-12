@@ -93,8 +93,23 @@
 			"path" : "pages/train/train",
 			"style" : 
 			{
+				"navigationBarTitleText" : "知识闯关",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path" : "pages/train/levels",
+			"style" : 
+			{
 				"navigationBarTitleText" : "",
-				"navigationStyle": "custom"
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path" : "pages/train/start",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
 			}
 		}
 	],

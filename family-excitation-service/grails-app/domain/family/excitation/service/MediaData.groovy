@@ -11,10 +11,10 @@ class MediaData {
 
     static belongsTo = [releaseInformation:ReleaseInformation, user:User]
     static constraints = {
-        name maxSize: 100, nullable: true
+        name maxSize: 255, nullable: true
         releaseInformation nullable: true
-        localPath nullable: true
-        url nullable: true
+        localPath nullable: true, maxSize: 255
+        url nullable: true, maxSize: 255
         user nullable: true
         contentType nullable: true
     }
