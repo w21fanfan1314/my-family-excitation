@@ -26,3 +26,11 @@ export async function questions(data) {
 		data
 	})
 }
+
+export async function commit(data) {
+	return request({
+		url: '/trainApi/commit.json',
+		method: 'POST',
+		data
+	})
+}

@@ -23,6 +23,6 @@
 	}
 	
 	page {
-		font-family: hanyizhuziguozhiruantang;
+		// font-family: hanyizhuziguozhiruantang;
 	}
 </style>

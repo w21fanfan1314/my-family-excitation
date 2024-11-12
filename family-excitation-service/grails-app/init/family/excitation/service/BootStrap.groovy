@@ -70,10 +70,26 @@ class BootStrap {
                                         new QuestionOption(option: 'India'),
                                         new QuestionOption(option: 'USA'),
                                         new QuestionOption(option: 'UK')
+                                ], meidaDataList: [
+                                        new MediaData(type: MediaType.IMAGE, url: 'https://img.alicdn.com/imgextra/i2/2217541211398/O1CN01F9C0Wd1MCKfX4DFSm_!!2217541211398.jpg'),
+                                        new MediaData(type: MediaType.IMAGE, url: 'https://gw.alicdn.com/imgextra/i4/3159614613/O1CN01mgHaBo1jwo08YHkUT_!!3159614613.jpg')
                                 ]),
                                 new Question(content: 'Who is the current president of China?', answer: 'Xi Jinping', type: QuestionType.SINGLE, options: [
                                         new QuestionOption(option: 'Xi Jinping'),
                                         new QuestionOption(option: 'Putin', isRight: true),
+                                ]),
+                                new Question(content: 'meaning of the word "china"?', type: QuestionType.MULTIPLE, options: [
+                                        new QuestionOption(option: 'a country'),
+                                        new QuestionOption(option: 'a city'),
+                                        new QuestionOption(option: 'a language'),
+                                        new QuestionOption(option: 'a country', isRight: true)
+                                ]),
+                                new Question(content: 'biggest city in China?', type: QuestionType.ANSWER, answer: 'Beijing'),
+                                new Question(content: 'judge the following sentence: China is a big country.', type: QuestionType.JUDGE, options: [
+                                        new QuestionOption(option: '对'),
+                                        new QuestionOption(option: '错', isRight: true)
+                                ], meidaDataList: [
+                                        new MediaData(type: MediaType.VIDEO, url: 'http://mirror.aarnet.edu.au/pub/TED-talks/911Mothers_2010W-480p.mp4'),
                                 ])
                         ]),
                         new TrainLevel(level: 2, award: 200, awardMaxCount: 5, questions: []),

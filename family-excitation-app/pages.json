@@ -111,6 +111,13 @@
 			{
 				"navigationBarTitleText" : ""
 			}
+		},
+		{
+			"path" : "pages/train/settlement",
+			"style" : 
+			{
+				"navigationBarTitleText" : "闯关结算"
+			}
 		}
 	],
 	"globalStyle": {

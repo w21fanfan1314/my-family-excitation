@@ -2,7 +2,10 @@ package family.excitation.service.train
 
 import family.excitation.service.User
 
+import java.text.SimpleDateFormat
+
 class UserAnswer {
+    String answerId
     String answer
     Date dateCreated
     Date lastUpdated
@@ -11,13 +14,17 @@ class UserAnswer {
     static hasMany = [options: QuestionOption]
     static belongsTo = [question: Question, user: User]
     static constraints = {
-        lastUpdated nullable: false
+        answerId maxSize: 255
+        options nullable: true
         answer nullable: true
-        levelRecord nullable: true
     }
     static mapping = {
         sort 'dateCreated'
         order 'desc'
+    }
+
+    static def generateAnswerId() {
+        return new SimpleDateFormat('yyyyMMddHHmmssSSS').format(new Date())
     }
 
     def getCorrect() {
