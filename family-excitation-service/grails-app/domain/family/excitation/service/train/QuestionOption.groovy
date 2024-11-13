@@ -12,6 +12,7 @@ class QuestionOption {
     }
 
     static mapping = {
+        table "train_question_option"
         sort 'dateCreated'
         order 'desc'
     }
