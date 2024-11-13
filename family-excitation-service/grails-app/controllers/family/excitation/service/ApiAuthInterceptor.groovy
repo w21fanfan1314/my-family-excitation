@@ -15,7 +15,9 @@ class ApiAuthInterceptor {
 
     boolean before() {
         def token = request.getHeader('app-token')
-        if (token && Login.findByToken(token)) {
+        def login
+        if (token && (login = Login.findByToken(token))) {
+            request.setAttribute("user_login", login)
             return true
         } else {
             render new ApiResult(code: 401, msg: '未登录') as JSON

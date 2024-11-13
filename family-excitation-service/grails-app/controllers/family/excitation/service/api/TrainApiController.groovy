@@ -2,18 +2,21 @@ package family.excitation.service.api
 
 import family.excitation.service.Login
 import family.excitation.service.train.Question
-import family.excitation.service.train.QuestionOption
 import family.excitation.service.train.QuestionType
 import family.excitation.service.train.Train
 import family.excitation.service.train.TrainLevel
+import family.excitation.service.train.Transcript
+import family.excitation.service.train.TranscriptService
 import family.excitation.service.train.UserAnswer
 import family.excitation.service.train.UserAnswerService
+import grails.converters.JSON
 
 class TrainApiController {
 
     static allowedMethods = [commit: 'POST']
 
     UserAnswerService userAnswerService
+    TranscriptService transcriptService
 
     def categories() {
         def result = Train.createCriteria().list {
@@ -60,7 +63,22 @@ class TrainApiController {
             maxResults(size)
             firstResult(page * size)
         }
-        respond new ApiResult(code: 200, msg: '查询成功', data: [levels: result, total: TrainLevel.countByTrain(train)])
+
+        def user = request.getAttribute("user_login")?.user
+        def data = result?.collect { TrainLevel level ->
+            return [
+                    id: level.id,
+                    level: level.level,
+                    questionCount: level.questionCount,
+                    award: level.award,
+                    awardMaxCount: level.awardMaxCount,
+                    starCount: level.bestTranscriptByUser(user)?.starCount,
+                    questions: level.questions,
+                    dateCreated: level.dateCreated,
+                    lastUpdated: level.lastUpdated
+            ]
+        }
+        respond new ApiResult(code: 200, msg: '查询成功', data: [levels: data, total: TrainLevel.countByTrain(train)])
     }
 
     def questions(TrainLevel level) {
@@ -70,7 +88,6 @@ class TrainApiController {
         }
         def result = Question.createCriteria().list {
             eq('level', level)
-            order('dateCreated', 'desc')
         }
         respond new ApiResult(code: 200, msg: '查询成功', data: result)
     }
@@ -107,34 +124,33 @@ class TrainApiController {
             respond new ApiResult(code: 400, msg: '答案不能为空')
             return
         }
-        def userAnswers = []
-        def answerId = UserAnswer.generateAnswerId()
-        for (def item in commitData) {
-            def qid = item.id
-            def answer = item.answer
-
-            def question = Question.get(qid)
-            def options = null
+        def transcript = new Transcript(user: user, level: level)
+        level.questions.each { Question question ->
+            def answer = null
+            for (def item in commitData) {
+                def qid = item.id
+                if (qid == question.id) {
+                    answer = item.answer
+                }
+            }
             def userAnswer = null
             switch (question.type) {
                 case QuestionType.SINGLE:
                 case QuestionType.JUDGE:
-                    options = QuestionOption.findAllByIdInList([answer])
-                    break
-                case QuestionType.MULTIPLE:
-                    options = QuestionOption.findAllByIdInList(answer)
-                    break
                 case QuestionType.ANSWER:
                     userAnswer = answer
                     break
+                case QuestionType.MULTIPLE:
+                    userAnswer = answer?.join(',')
+                    break
             }
-            if (options || answer) {
-                userAnswers << new UserAnswer(question: question, user: user, options: options, answer: userAnswer, answerId: answerId)
-            }
+            transcript.addToAnswers(new UserAnswer(question: question, user: user, answer: userAnswer))
         }
-        UserAnswer.withTransaction {
-            UserAnswer.saveAll(userAnswers)
-        }
-        respond new ApiResult(code: 200, msg: '提交成功', data: [score: Question.statScore(answerId), wrongs: Question.statWrongs(answerId)])
+        def result = transcriptService.save(transcript)
+        respond new ApiResult(code: 200, msg: '提交成功', data: result)
+    }
+
+    def transcriptDetail(Transcript transcript) {
+        respond new ApiResult(code: 200, msg: '查询成功', data: transcript)
     }
 }

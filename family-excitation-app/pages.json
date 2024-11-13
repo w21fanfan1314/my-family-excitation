@@ -113,10 +113,10 @@
 			}
 		},
 		{
-			"path" : "pages/train/settlement",
+			"path" : "pages/train/wrongs",
 			"style" : 
 			{
-				"navigationBarTitleText" : "闯关结算"
+				"navigationBarTitleText" : "错题回顾"
 			}
 		}
 	],

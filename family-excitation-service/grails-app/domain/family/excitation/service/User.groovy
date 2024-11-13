@@ -1,6 +1,7 @@
 package family.excitation.service
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import family.excitation.service.train.Transcript
 import family.excitation.service.train.UserAnswer
 
 class User {
@@ -21,7 +22,7 @@ class User {
                       scores: Score,
                       orders: Order,
                       releases: ReleaseInformation,
-                      mediaDataList: MediaData, userAnswers: UserAnswer]
+                      mediaDataList: MediaData, userAnswers: UserAnswer, transcripts: Transcript]
     static constraints = {
         name maxSize: 30
         userName unique: true, maxSize: 30
@@ -36,6 +37,7 @@ class User {
         releases nullable: true
         mediaDataList nullable: true
         userAnswers nullable: true
+        transcripts nullable: true
     }
 
     static mapping = {

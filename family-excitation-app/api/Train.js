@@ -1,8 +1,9 @@
 import {request} from './Request'
 
-export async function trains() {
+export async function trains(data) {
 	return request({
-		url: '/trainApi/list.json'
+		url: '/trainApi/list.json',
+		data
 	})
 }
 
@@ -31,6 +32,13 @@ export async function commit(data) {
 	return request({
 		url: '/trainApi/commit.json',
 		method: 'POST',
+		data
+	})
+}
+
+export async function transcriptDetail(data) {
+	return request({
+		url: '/trainApi/transcriptDetail.json',
 		data
 	})
 }

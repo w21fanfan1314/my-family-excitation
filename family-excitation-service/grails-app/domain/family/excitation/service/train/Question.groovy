@@ -25,32 +25,14 @@ class Question {
         order 'desc'
     }
 
-    // 统计得分，采用百分制
-    static def statScore(String answerId) {
-        if (!answerId) {
-            return 0
-        }
-        def answers = UserAnswer.findAllByAnswerId(answerId)
-        def rightCount = answers.findAll { it.correct}.size()
-        return rightCount / answers.size() * 100
-    }
-    // 统计错题
-    static def statWrongs(String answerId) {
-        if (!answerId) {
-            return null
-        }
 
-        def answers = UserAnswer.findAllByAnswerId(answerId)
-        return answers?.findAll { !it.correct }
-    }
 
     def getRightOption() {
-        if (type == QuestionType.SINGLE || type == QuestionType.JUDGE) {
-            return options?.find { it.isRight }
-        } else if (type == QuestionType.MULTIPLE) {
+        if (type == QuestionType.SINGLE || type == QuestionType.JUDGE || type == QuestionType.MULTIPLE) {
             return options?.findAll { it.isRight }
+        } else {
+            return [new QuestionOption(option: answer, isRight: true)]
         }
-        return null
     }
 
 

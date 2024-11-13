@@ -6,6 +6,7 @@ import family.excitation.service.train.QuestionType
 import family.excitation.service.train.Train
 import family.excitation.service.train.TrainLevel
 import family.excitation.service.train.TrainService
+import family.excitation.service.train.Transcript
 import family.excitation.service.train.UserAnswer
 import grails.converters.JSON
 import org.apache.commons.lang3.RandomUtils
@@ -92,7 +93,24 @@ class BootStrap {
                                         new MediaData(type: MediaType.VIDEO, url: 'http://mirror.aarnet.edu.au/pub/TED-talks/911Mothers_2010W-480p.mp4'),
                                 ])
                         ]),
-                        new TrainLevel(level: 2, award: 200, awardMaxCount: 5, questions: []),
+                        new TrainLevel(level: 2, award: 200, awardMaxCount: 2, currency: rmb, questions: [
+                                new Question(content: 'just a test', type: QuestionType.SINGLE, options: [
+                                        new QuestionOption(option: 'just a test1', isRight: true),
+                                        new QuestionOption(option: 'just a test')
+                                ]),
+                                new Question(content: 'just a test2', type: QuestionType.SINGLE, options: [
+                                        new QuestionOption(option: 'just a test1', isRight: true),
+                                        new QuestionOption(option: 'just a test')
+                                ]),
+                                new Question(content: 'just a test3', type: QuestionType.SINGLE, options: [
+                                        new QuestionOption(option: 'just a test1', isRight: true),
+                                        new QuestionOption(option: 'just a test')
+                                ]),
+                                new Question(content: 'just a test4', type: QuestionType.SINGLE, options: [
+                                        new QuestionOption(option: 'just a test1', isRight: true),
+                                        new QuestionOption(option: 'just a test')
+                                ])
+                        ]),
                         new TrainLevel(level: 3, award: 300, awardMaxCount: 5, questions: []),
                         new TrainLevel(level: 4, award: 400, awardMaxCount: 5, questions: []),
                         new TrainLevel(level: 5, award: 500, awardMaxCount: 5, questions: []),
@@ -283,7 +301,8 @@ class BootStrap {
                     dateCreated: it.dateCreated,
                     lastUpdated: it.lastUpdated,
                     meidaDataList: it.meidaDataList,
-                    options: it.options
+                    options: it.options,
+                    rightOption: it.rightOption
             ]
         }
         JSON.registerObjectMarshaller(UserAnswer) {
@@ -293,7 +312,8 @@ class BootStrap {
                     dateCreated: it.dateCreated,
                     lastUpdated: it.lastUpdated,
                     question: it.question,
-                    options: it.options
+                    userSelectedOptions: it.userSelectedOptions,
+                    correct: it.correct
             ]
         }
         JSON.registerObjectMarshaller(TrainLevel) {
@@ -302,7 +322,11 @@ class BootStrap {
                     level: it.level,
                     dateCreated: it.dateCreated,
                     lastUpdated: it.lastUpdated,
-                    questionCount: it.questionCount
+                    questionCount: it.questionCount,
+                    award: it.award,
+                    awardMaxCount: it.awardMaxCount,
+                    awardType: it.awardType,
+                    currency: it.currency
             ]
         }
         JSON.registerObjectMarshaller(Train) {
@@ -315,6 +339,20 @@ class BootStrap {
                     dateCreated: it.dateCreated,
                     lastUpdated: it.lastUpdated,
                     levels: it.levels
+            ]
+        }
+
+        JSON.registerObjectMarshaller(Transcript) {
+            return [
+                    id: it.id,
+                    score: it.score,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated,
+                    level: it.level,
+                    answers: it.answers,
+                    wrongs: it.wrongs,
+                    starCount: it.starCount,
+                    hasAward: it.hasAward
             ]
         }
     }

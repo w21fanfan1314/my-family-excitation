@@ -6,11 +6,13 @@
 				<view class="level-item">
 					<view class="level-title">
 						<text>第{{item.level}}关</text>
-						<uv-rate :size="30" count="3" active-color="warning" :readonly="true"></uv-rate>
+						<text class="uni-mt-2 desc">
+							共{{item.questionCount}}道题
+						</text>
 					</view>
-					<text class="uni-mt-2 desc">
-						共{{item.questionCount}}道题
-					</text>
+					<view class="uni-mr-10">
+						<uv-rate :size="24" count="3" active-color="warning" :readonly="true" :touchable="false" :value="item.starCount"></uv-rate>
+					</view>
 				</view>
 			</tui-list-cell>
 		</tui-list-view>
@@ -22,7 +24,7 @@
 
 <script setup>
 	import { computed, getCurrentInstance, ref } from 'vue';
-	import { onLoad } from '@dcloudio/uni-app'
+	import { onLoad, onBackPress } from '@dcloudio/uni-app'
 	import { levels } from '../../api/Train';
 	import { useRefreshData } from '../../common/useRefreshData';
 	import moment from 'moment'
@@ -53,6 +55,8 @@
 		})
 		await loadLevels()
 	})
+	
+	
 	
 	function onItemClick(item) {
 		uni.navigateTo({
@@ -108,19 +112,21 @@
 		
 		.level-item {
 			display: flex;
-			flex-direction: column;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
 			.level-title {
 				color: $uni-text-color;
 				font-size: 1.2em;
 				display: flex;
-				flex-direction: row;
-				align-items: center;
+				flex-direction: column;
+				flex: 1;
+				.desc {
+					color: $uni-text-color-grey;
+					font-size: 0.9em;
+				}
 			}
 			
-			.desc {
-				color: $uni-text-color-grey;
-				font-size: 0.9em;
-			}
 		}
 	}
 </style>

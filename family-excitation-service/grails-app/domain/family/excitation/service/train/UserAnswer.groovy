@@ -5,17 +5,14 @@ import family.excitation.service.User
 import java.text.SimpleDateFormat
 
 class UserAnswer {
-    String answerId
+    // 如果是选项题， 则存入所选的ID用','分割
     String answer
     Date dateCreated
     Date lastUpdated
 
-    static transients = ['correct']
-    static hasMany = [options: QuestionOption]
-    static belongsTo = [question: Question, user: User]
+    static transients = ['correct', 'userSelectedOptions']
+    static belongsTo = [question: Question, user: User, transcript: Transcript]
     static constraints = {
-        answerId maxSize: 255
-        options nullable: true
         answer nullable: true
     }
     static mapping = {
@@ -23,28 +20,40 @@ class UserAnswer {
         order 'desc'
     }
 
-    static def generateAnswerId() {
-        return new SimpleDateFormat('yyyyMMddHHmmssSSS').format(new Date())
-    }
 
     def getCorrect() {
-        if (question.type == QuestionType.SINGLE || question.type == QuestionType.JUDGE) {
-            return (options?.size() > 0 && options[0].isRight)
-        } else if (question.type == QuestionType.MULTIPLE) {
-            if (options?.size() > 0 && options.size() == question.rightOption?.size()) {
-                for (option in options) {
-                    if (!option.isRight) {
-                        return false
-                    }
-                }
-                return true
-            } else {
-                return false
-            }
-        } else if (question.type == QuestionType.ANSWER) {
+        if (question.type == QuestionType.SINGLE ||
+                question.type == QuestionType.JUDGE ||
+                question.type == QuestionType.MULTIPLE) {
+            return answerGetOptions().findAll { it.isRight}.size() == question.rightOption?.size()
+        } else {
             return answer?.equalsIgnoreCase(question.answer)
         }
-        return false
+    }
+
+    def getUserSelectedOptions() {
+        if (question.type == QuestionType.SINGLE ||
+                question.type == QuestionType.JUDGE ||
+                question.type == QuestionType.MULTIPLE) {
+            return answerGetOptions()
+        } else {
+            return new QuestionOption(option: answer)
+        }
+    }
+
+    def answerGetOptions() {
+        def userSelectedOptions = []
+        if (answer) {
+            def optionIds = answer.split(',')
+            for (optionId in optionIds) {
+                def option = question.options?.find { it.id.toString() == optionId }
+                if (!option) {
+                    continue
+                }
+                userSelectedOptions << option
+            }
+        }
+        return userSelectedOptions
     }
 
     @Override

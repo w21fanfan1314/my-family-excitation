@@ -4,34 +4,8 @@
 		<swiper v-else :indicator-dots="true" :style="{height: windowHeight}" @change="onSwiperChange" :current-item-id="currentSelectedQuestionId">
 			<swiper-item v-for="(item, index) in questionsData" :key="'question-item-' + item.id" :item-id="String(item.id)">
 				<view class="question-item">
-					<uni-section type="circle" :title="'[' + (index + 1) +'/'+ questionsData.length +']'+'问题'" :padding="true">
-						<view style="display: flex; flex-direction: column;">
-							<uv-text :text="item.content" color="#000000" size="1.2em"></uv-text>
-							<view v-for="media in item.meidaDataList" :key="'question-' + item.id +'-media-' + media.id"  class="uni-mt-10">
-								<uv-image v-if="media.type.name === 'IMAGE'" width="100%" height="350rpx" :radius="6" :src="media.url" mode="aspectFit" @click="onImageClick(item)"></uv-image>
-								<video v-if="media.type.name === 'VIDEO'" style="width: 100%; height: 350rpx;" :src="media.url"></video>
-							</view>
-						</view>
-					</uni-section>
-					<uni-section v-if="item.type.name === 'SINGLE'" type="line" title="选项" :padding="true">
-						<uv-radio-group v-model="formData.commitData[index].answer"  placement="column">
-							<uv-radio v-for="opt in item.options" :name="opt.id" :label="opt.option" :custom-style="{marginBottom: '30rpx'}"></uv-radio>
-						</uv-radio-group>
-					</uni-section>
-					<uni-section  v-else-if="item.type.name === 'MULTIPLE'" type="line" title="选项" :padding="true">
-						<uv-checkbox-group v-model="formData.commitData[index].answer"  placement="column">
-							<uv-checkbox v-for="opt in item.options" :name="opt.id" :label="opt.option" :custom-style="{marginBottom: '30rpx'}"></uv-checkbox>
-						</uv-checkbox-group>
-					</uni-section>
-					<uni-section v-model="item.answer"  v-else-if="item.type.name === 'JUDGE'" type="line" title="判断" :padding="true">
-						<uv-radio-group v-model="formData.commitData[index].answer" >
-							<uv-radio v-for="opt in item.options" :name="opt.id" :label="opt.option" :custom-style="{marginRight: '30rpx', marginBottom: '60rpx'}"></uv-radio>
-						</uv-radio-group>
-					</uni-section>
-					<uni-section v-else type="line" title="请输入" padding>
-						<uv-textarea v-model="formData.commitData[index].answer" :custom-style="{marginBottom: '60rpx'}" placeholder="请输入"></uv-textarea>
-					</uni-section>
-					<view style="padding: 0 30rpx;">
+					<question-item :question="item" :num="(index + 1)" :total-count="questionsData?.length" v-model="formData.commitData[index].answer"></question-item>
+					<view style="padding: 60rpx 30rpx 0 30rpx;">
 						<tui-button v-if="index + 1 < questionsData.length" type="primary" @click="onNextClick(index + 1)" :prevent-click="true">下一题</tui-button>
 						<tui-button v-else type="green" :prevent-click="true" @click="onCommit">提交</tui-button>
 					</view>
@@ -39,15 +13,20 @@
 			</swiper-item>
 		</swiper>
 	</view>
+	<settlement-rate-modal ref="settlementRateModal" :transcript="transcriptData"></settlement-rate-modal>
 </template>
 
 <script setup>
-	import { onLoad } from '@dcloudio/uni-app'
+	import { onLoad, onBackPress } from '@dcloudio/uni-app'
 	import { computed, getCurrentInstance, ref } from 'vue';
 	import { commit, questions } from '../../api/Train';
+	import QuestionItem from './components/question-item.vue';
+	import SettlementRateModal from './components/settlement-rate-modal.vue';
 	
 	const levelData = ref()
+	const transcriptData = ref()
 	const questionsData = ref([])
+	const settlementRateModal = ref([])
 	const noQuestionsData = ref(false)
 	const windowHeight = computed(() => uni.getWindowInfo().windowHeight + 'px')
 	const currentSelectedQuestionId = ref()
@@ -68,6 +47,22 @@
 			})
 		})
 		await loadQuestions()
+	})
+	
+	onBackPress((res) => {
+		if (res.from === 'backbutton' && questionsData.value?.length > 0) {
+			uni.showModal({
+				title: '提示',
+				content: '正在闯关，是否退出？',
+				confirmText: '退出',
+				success(e) {
+					if (e.confirm) {
+						uni.navigateBack()
+					}
+				}
+			})
+			return true
+		}
 	})
 	
 	function onSwiperChange(e) {
@@ -92,13 +87,6 @@
 		})
 	}
 	
-	function onImageClick(item) {
-		const urls = item.meidaDataList.filter(media => media.type.name === 'IMAGE').map(media => media.url)
-		uni.previewImage({
-			urls,
-		})
-	}
-	
 	async function commitData() {
 		uni.showLoading({
 			title: '查询中...'
@@ -106,16 +94,11 @@
 		try {
 			const res = await commit(formData.value)
 			if (res.code === 200) {
-				 uni.showToast({
-				 	icon: 'success',
-					title: '提交成功'
-				 })
-				 uni.navigateTo({
-				 	url: '/pages/train/settlement',
-					success(res) {
-						res.eventChannel.emit('settlementData', {info: res.data})
-					}
-				 })
+				transcriptData.value = res.data			 
+				 if (levelData.value && levelData.value.starCount < res.data.starCount) {
+					 levelData.value.starCount = res.data.starCount
+				 }
+				settlementRateModal.value.open()
 			} else {
 				uni.showToast({
 					icon: 'none',
@@ -171,9 +154,6 @@
 		display: flex;
 		flex-direction: column;
 		
-		.question-item {
-			display: flex;
-			flex-direction: column;
-		}
+		
 	}
 </style>

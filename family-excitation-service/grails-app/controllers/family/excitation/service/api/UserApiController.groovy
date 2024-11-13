@@ -1,5 +1,6 @@
 package family.excitation.service.api
 
+import family.excitation.service.Commons
 import family.excitation.service.Login
 import family.excitation.service.Currency
 import family.excitation.service.MediaData
@@ -11,7 +12,6 @@ import family.excitation.service.LoginService
 import family.excitation.service.LoginType
 import family.excitation.service.User
 import family.excitation.service.UserService
-import grails.converters.JSON
 
 import java.time.Instant
 import java.time.ZoneId
@@ -187,7 +187,7 @@ class UserApiController {
     }
 
     def queryScore(User user, long time) {
-        def timeRange = timeToRange(time)
+        def timeRange = Commons.timeToRange(time)
         def scores = Score.createCriteria().list {
             eq('user', user)
             between('dateCreated', timeRange[0], timeRange[1])
@@ -197,7 +197,7 @@ class UserApiController {
     }
 
     def queryTopAScore(long time) {
-        def timeRange = timeToRange(time)
+        def timeRange = Commons.timeToRange(time)
         def scores = Score.createCriteria().list {
             ge('score', 85)
             between('dateCreated', timeRange[0], timeRange[1])
@@ -215,9 +215,5 @@ class UserApiController {
         respond new ApiResult(code: 200, msg: '查询成功', data: [records: records, total: UserRecord.countByUser(user)])
     }
 
-    private static def timeToRange(long time) {
-        def begin = new Date(Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault()).with(ChronoField.NANO_OF_DAY, 0).toInstant().toEpochMilli())
-        def end = new Date(begin.time + 24 * 60 * 60 * 1000 - 1000)
-        return [begin, end]
-    }
+
 }
