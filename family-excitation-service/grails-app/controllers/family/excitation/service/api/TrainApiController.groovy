@@ -1,15 +1,25 @@
 package family.excitation.service.api
 
+import family.excitation.service.Currency
 import family.excitation.service.Login
+import family.excitation.service.MediaData
 import family.excitation.service.train.Question
+import family.excitation.service.train.QuestionOption
+import family.excitation.service.train.QuestionService
 import family.excitation.service.train.QuestionType
 import family.excitation.service.train.Train
 import family.excitation.service.train.TrainLevel
+import family.excitation.service.train.TrainLevelAwardType
+import family.excitation.service.train.TrainLevelService
+import family.excitation.service.train.TrainService
 import family.excitation.service.train.Transcript
 import family.excitation.service.train.TranscriptService
 import family.excitation.service.train.UserAnswer
 import family.excitation.service.train.UserAnswerService
 import grails.converters.JSON
+import grails.util.Environment
+import groovy.json.JsonSlurper
+import org.grails.web.json.JSONArray
 
 class TrainApiController {
 
@@ -17,6 +27,68 @@ class TrainApiController {
 
     UserAnswerService userAnswerService
     TranscriptService transcriptService
+    TrainService trainService
+    TrainLevelService trainLevelService
+    QuestionService questionService
+
+    def generateAll() {
+        def rootPath
+        switch (Environment.current) {
+            case Environment.DEVELOPMENT:
+                rootPath = 'D:\\Downloads\\trains';
+                break
+            case Environment.PRODUCTION:
+                rootPath = '/www/wwwroot/47.120.23.110/trains'
+                break
+        }
+        def rootFile = new File(rootPath)
+        def jsonSlurper = new JsonSlurper()
+        rootFile.eachFile {
+            if (it.directory) {
+                Train train = Train.findByName(it.name)
+                if (!train) {
+                    train = trainService.save(new Train(name: it.name))
+                }
+                it.eachFile {File file ->
+                   if (file.file && file.name.endsWith('.json')) {
+                       def name = file.name.substring(0, file.name.lastIndexOf(".json"))
+                       def commands = name.split('-')
+                       if (commands.length == 5) {
+                           def levelValue = commands[0]
+                           def awardValue = commands[1]
+                           def maxCountValue = commands[2]
+                           def currencyValue = commands[3]
+                           def awardTypeValue = commands[4]
+                           if (levelValue.integer && awardValue.double && maxCountValue.integer) {
+                               def level = levelValue.toInteger()
+                               TrainLevel trainLevel = TrainLevel.findByTrainAndLevel(train, level)
+                               if (!trainLevel) {
+                                   trainLevel = trainLevelService.save(new TrainLevel(train: train, level: level, award: awardValue.toDouble(),
+                                           awardMaxCount: maxCountValue.toInteger(),
+                                           currency: Currency.findByName(currencyValue),
+                                           awardType: TrainLevelAwardType.valueOf(awardTypeValue)))
+                               }
+                               def json = jsonSlurper.parse(file)
+                               json.each {
+                                   if (it.content) {
+                                       def question = Question.findByLevelAndContent(trainLevel, it.content)
+                                       if (!question) {
+                                           def mediaDataList = it.media?.split(',')
+                                           questionService.save(new Question(content: it.content, type: QuestionType.valueOf(it.type), level: trainLevel,
+                                                   options: it.options?.collect {String opt -> new QuestionOption(option: opt, isRight: opt == it.answer)},
+                                                   meidaDataList: mediaDataList?.collect {String url -> new MediaData(url: url)}
+                                           ))
+                                       }
+                                   }
+                               }
+                           }
+                       }
+                   }
+                }
+            }
+        }
+        respond new ApiResult(code: 200, msg: '生成成功')
+    }
 
     def categories() {
         def result = Train.createCriteria().list {

@@ -58,6 +58,6 @@ class UserAnswer {
 
     @Override
     String toString() {
-        return "${user} ${question}"
+        return "[${correct}]${user} ${question}"
     }
 }

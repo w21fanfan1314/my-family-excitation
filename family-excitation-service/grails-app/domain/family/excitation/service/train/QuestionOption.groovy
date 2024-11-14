@@ -15,12 +15,13 @@ class QuestionOption {
         table "train_question_option"
         sort 'dateCreated'
         order 'desc'
+        option column: "option_content"
     }
 
 
     @Override
     String toString() {
-        return option
+        return "[${isRight}]${option}"
     }
 
 }

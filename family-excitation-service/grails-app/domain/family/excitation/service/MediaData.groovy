@@ -1,5 +1,7 @@
 package family.excitation.service
 
+import family.excitation.service.train.Question
+
 class MediaData {
     String name
     String url
@@ -9,7 +11,7 @@ class MediaData {
     Date dateCreated
     Date lastUpdated
 
-    static belongsTo = [releaseInformation:ReleaseInformation, user:User]
+    static belongsTo = [releaseInformation:ReleaseInformation, user:User, question :Question]
     static constraints = {
         name maxSize: 255, nullable: true
         releaseInformation nullable: true
@@ -17,6 +19,7 @@ class MediaData {
         url nullable: true, maxSize: 255
         user nullable: true
         contentType nullable: true
+        question nullable: true
     }
     static mapping = {
         sort 'dateCreated'
