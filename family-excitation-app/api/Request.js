@@ -1,6 +1,6 @@
 import { useUserStore } from "../store/user"
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
+export const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
 
 export async function request(options) {
     return new Promise((resolve, reject) => {

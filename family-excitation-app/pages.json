@@ -118,6 +118,20 @@
 			{
 				"navigationBarTitleText" : "错题回顾"
 			}
+		},
+		{
+			"path" : "pages/scan-qrcode/scan-qrcode",
+			"style" : 
+			{
+				"navigationBarTitleText" : "扫描"
+			}
+		},
+		{
+			"path" : "pages/test-paper-track/test-paper-track",
+			"style" : 
+			{
+				"navigationBarTitleText" : "我的试卷"
+			}
 		}
 	],
 	"globalStyle": {

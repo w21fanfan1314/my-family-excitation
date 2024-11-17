@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "jsqr": "^1.4.0",
     "moment": "^2.30.1",
     "thorui-uni": "^3.0.0"
   }

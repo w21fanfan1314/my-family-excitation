@@ -108,19 +108,18 @@ hibernate:
         queries: false
         use_second_level_cache: false
         use_query_cache: false
-    dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 dataSource:
     pooled: true
     jmxExport: true
-    driverClassName: com.mysql.cj.jdbc.Driver
 
 environments:
     development:
         dataSource:
             dbCreate: create-drop
-            url: jdbc:mysql://127.0.0.1:3306/family_excitation_db
-            username: root
-            password: 'fanfan.1314'
+            url: jdbc:h2:mem:books
+            driverClassName: org.h2.Driver
+            username: sa
+            password: ''
     test:
         dataSource:
             dbCreate: create-drop
@@ -128,9 +127,12 @@ environments:
             username: mattleo
             password: 'fanfan.1314'
     production:
+        hibernate:
+            dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         dataSource:
             dbCreate: update #create-drop
             url: jdbc:mysql://127.0.0.1:3306/family_excitation_db
+            driverClassName: com.mysql.cj.jdbc.Driver
             username: admin
             password: 'Birsz4mb3KmPHRZB'
             properties:

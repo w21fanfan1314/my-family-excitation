@@ -19,6 +19,7 @@ class BootStrap {
     CommodityService commodityService
     UserRecordService userRecordService
     TrainService trainService
+    TestPaperTrackService testPaperTrackService
 
     def init = { servletContext ->
         environments {
@@ -122,6 +123,8 @@ class BootStrap {
                 ], category: '英语', image: 'http://47.120.23.110/res/train_en.jpg'))
                 trainService.save(new Train(name: '数学大闯关', category: '数学'))
                 trainService.save(new Train(name: '语文大闯关', category: '语文'))
+
+                testPaperTrackService.save(new TestPaperTrack(user: martin, currency: rmb, award: 10))
             }
             production {
                 if (!User.findByUserName("admin")) {
@@ -353,6 +356,25 @@ class BootStrap {
                     wrongs: it.wrongs,
                     starCount: it.starCount,
                     hasAward: it.hasAward
+            ]
+        }
+        JSON.registerObjectMarshaller(TestPaperTrack) {
+            return [
+                    id: it.id,
+                    user: it.user,
+                    name: it.name,
+                    status: it.status,
+                    totalScore: it.totalScore,
+                    qualifiedScore: it.qualifiedScore,
+                    score: it.score,
+                    startTime: it.startTime,
+                    endTime: it.endTime,
+                    award: it.award,
+                    actualAward: it.actualAward,
+                    currency: it.currency,
+                    answerLimitTime: it.answerLimitTime,
+                    dateCreated: it.dateCreated,
+                    lastUpdated: it.lastUpdated
             ]
         }
     }

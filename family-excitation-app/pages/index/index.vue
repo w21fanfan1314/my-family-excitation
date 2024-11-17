@@ -28,14 +28,20 @@
 		  		</view>	  				  
 		  	</navigator>		  
 		  </uni-grid-item>
-		 <uni-grid-item>
+		 <!-- <uni-grid-item>
 			<navigator url="/pages/train/train">
 				<view class="menu-item">
 					<uni-icons type="hand-up-filled" color="#007aff" :size="24"></uni-icons>
 					闯关
 				</view>
 			</navigator>	 
-		  </uni-grid-item>
+		  </uni-grid-item> -->
+		  <uni-grid-item @click="onScanQr">
+		  		<view class="menu-item">
+		  			<uni-icons type="hand-up-filled" color="#007aff" :size="24"></uni-icons>
+		  			扫码
+		  		</view>		 
+		   </uni-grid-item>
 	  </uni-grid>
     </uni-card>
 
@@ -82,6 +88,7 @@ import { queryBalance, queryScore, queryTopAScore } from '../../api/UserApi';
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import { defaultAvatar } from '../../common/data';
 import { storeToRefs } from 'pinia'
+import { uploadFile } from '../../api/Request';
 
 const user = useUserStore()
 const scoreData = ref({starCount: 0, scores: []})
@@ -102,6 +109,25 @@ onPullDownRefresh(async() => {
 		uni.stopPullDownRefresh()
 	}
 })
+
+function onScanQr() {
+	// uni.navigateTo({
+	// 	url: '/pages/scan-qrcode/scan-qrcode',
+	// 	events:{
+	// 		qrCodeData({text}) {
+	// 			console.log("二维码内容", text)
+	// 			if (text) {
+	// 				uni.navigateTo({
+	// 					url: '/pages/test-paper-track/test-paper-track?trackId=' + text
+	// 				})
+	// 			}
+	// 		}
+	// 	}
+	// })
+	uni.navigateTo({
+		url: '/pages/test-paper-track/test-paper-track?trackId=' + 1
+	})
+}
 
 async function refreshData(showLoading = true) {
 	await user.loginValidCheck()

@@ -22,7 +22,7 @@ class User {
                       scores: Score,
                       orders: Order,
                       releases: ReleaseInformation,
-                      mediaDataList: MediaData, userAnswers: UserAnswer, transcripts: Transcript]
+                      mediaDataList: MediaData, userAnswers: UserAnswer, transcripts: Transcript, paperTracks: TestPaperTrack]
     static constraints = {
         name maxSize: 30
         userName unique: true, maxSize: 30
@@ -38,6 +38,7 @@ class User {
         mediaDataList nullable: true
         userAnswers nullable: true
         transcripts nullable: true
+        paperTracks nullable: true
     }
 
     static mapping = {
