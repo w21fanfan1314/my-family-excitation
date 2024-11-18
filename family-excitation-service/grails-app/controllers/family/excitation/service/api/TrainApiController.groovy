@@ -90,6 +90,16 @@ class TrainApiController {
         respond new ApiResult(code: 200, msg: '生成成功')
     }
 
+    def generate() {
+        request.withFormat {
+            json {
+                def page = params.int('page') ?: 1
+                def limit = params.int("limit") ?: 20
+                respond new ApiResult(code: 200, msg: '查询成功', data: [items: Train.findAll(offset: (page - 1) * limit, max: limit), total: Train.count()])
+            }
+        }
+    }
+
     def categories() {
         def result = Train.createCriteria().list {
             projections {

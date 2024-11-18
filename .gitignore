@@ -1,2 +1,3 @@
 /.metadata/
 .DS_Store
+family-excitation-app/node_modules/**

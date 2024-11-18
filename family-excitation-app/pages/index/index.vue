@@ -111,22 +111,22 @@ onPullDownRefresh(async() => {
 })
 
 function onScanQr() {
-	// uni.navigateTo({
-	// 	url: '/pages/scan-qrcode/scan-qrcode',
-	// 	events:{
-	// 		qrCodeData({text}) {
-	// 			console.log("二维码内容", text)
-	// 			if (text) {
-	// 				uni.navigateTo({
-	// 					url: '/pages/test-paper-track/test-paper-track?trackId=' + text
-	// 				})
-	// 			}
-	// 		}
-	// 	}
-	// })
 	uni.navigateTo({
-		url: '/pages/test-paper-track/test-paper-track?trackId=' + 1
+		url: '/pages/scan-qrcode/scan-qrcode',
+		events:{
+			qrCodeData({text}) {
+				console.log("二维码内容", text)
+				if (text) {
+					uni.navigateTo({
+						url: '/pages/test-paper-track/test-paper-track?trackId=' + text
+					})
+				}
+			}
+		}
 	})
+	// uni.navigateTo({
+	// 	url: '/pages/test-paper-track/test-paper-track?trackId=' + 1
+	// })
 }
 
 async function refreshData(showLoading = true) {

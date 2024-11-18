@@ -64,7 +64,7 @@
 					<view style="display: flex; flex-direction: column;">
 						<uv-text size="40" type="success" text="合格" bold="true" align="center"></uv-text>
 						<uv-gap height="30rpx"></uv-gap>
-						<uv-text :text="`本次成绩${testPaperTrackData.score}分`" bold="true" align="center"></uv-text>
+						<uv-text  prefix-icon="star-fill" :icon-style="{fontSize: '40rpx'}" :text="`本次成绩${testPaperTrackData.score}分`" bold="true" align="center"></uv-text>
 					</view>
 				</view>
 				<view class="uni-mt-10" v-if="hasAward">
@@ -75,21 +75,28 @@
 		<view v-else-if="status === 'RECEIVED'">
 			<uni-card :title="testPaperTrackData.name">
 				<view style="display: flex; flex-direction: column; align-items: center;">
-					<uv-image :src="`/static/test-paper-status/${status}.gif`" width="300" mode="widthFix"></uv-image>
+					<uv-image :src="`/static/test-paper-status/${status}.gif`" width="200" mode="widthFix"></uv-image>
 					<uv-gap height="30rpx"></uv-gap>
 					<view style="display: flex; flex-direction: column;">
 						<uv-text size="40" type="success" text="合格" bold="true" align="center"></uv-text>
 						<uv-gap height="30rpx"></uv-gap>
-						<uv-text :text="`本次成绩${testPaperTrackData.score}分`" bold="true" align="center"></uv-text>
+						<uv-text prefix-icon="star-fill" :icon-style="{fontSize: '40rpx'}" :text="`本次成绩${testPaperTrackData.score}分`" bold="true" align="center"></uv-text>
 					</view>
 				</view>
-				<view class="uni-mt-10">
-					<tui-button type="danger" shape="circle" :disabled="true">已领取{{testPaperTrackData.currency.name}}:{{testPaperTrackData.currency.symbol}}{{testPaperTrackData.answerLimitTime}}元</tui-button>
+				<view class="uni-mt-10" style="display: flex; flex-direction: column; align-items: center;">
+					<tui-button type="danger" shape="circle" :disabled="true">已领取{{award}}</tui-button>
 				</view>
 			</uni-card>
 		</view>
 	</view>
 	<tui-toast ref="toast"></tui-toast>
+	<uv-modal ref="sucReceivedModal" mode="center" bg-color="#ffffff" :closeable="true">
+		<view style="display: flex; flex-direction: column; align-items: center;">
+			<uv-text type="primary" :size="20" :bold="true" align="center" text="成功领取"></uv-text>
+			<uv-gap height="60rpx"></uv-gap>
+			<uv-text type="error" :bold="true" :size="30" :text="award" align="center"></uv-text>
+		</view>
+	</uv-modal>
 </template>
 
 <script setup>
@@ -119,6 +126,7 @@
 		status: ''
 	})
 	const toast = ref()
+	const sucReceivedModal = ref()
 	const windowHeight = computed(() => uni.getWindowInfo().windowHeight + 'px')
 	const desc = computed(() => {
 		if (testPaperTrackData.value) {
@@ -179,9 +187,7 @@
 		formData.value.status = 'RECEIVED'
 		const res = await updateStatus()
 		if (res?.code === 200) {
-			toast.value.show({
-				title: '领取成功'
-			})
+			sucReceivedModal.value?.open()
 		}
 	}
 	
@@ -224,6 +230,7 @@
 					title: res.msg
 				})
 			}
+			return res
 		} catch(err) {
 			uni.showToast({
 				icon: 'none',

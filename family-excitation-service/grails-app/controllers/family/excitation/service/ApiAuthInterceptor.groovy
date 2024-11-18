@@ -11,6 +11,8 @@ class ApiAuthInterceptor {
                 .except(controler: 'userApi',action: 'login')
                 .except(controler: 'releaseInformationApi',action: 'generateAll')
                 .except(controler: 'mediaDataApi',action: 'show')
+                .except(controler: 'trainApi',action: 'generateAll')
+                .except(controler: 'trainApi',action: 'generate')
     }
 
     boolean before() {
