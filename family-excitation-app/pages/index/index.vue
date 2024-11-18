@@ -4,7 +4,7 @@
     <uni-card>
      <navigator url="/pages/user/user">
 		 <view class="user-info">
-		   <uv-avatar :size="60" :src="user.userInfo?.avatar || defaultAvatar"></uv-avatar>
+		   <uv-avatar :size="60" :src="user?.userInfo?.avatar || defaultAvatar"></uv-avatar>
 		   <view class="info-container">
 		     <text>{{user.userInfo?.name}}</text>
 		     <uni-rate :max="starCount" :value="starCount" :readonly="true"></uni-rate>
@@ -38,7 +38,7 @@
 		  </uni-grid-item> -->
 		  <uni-grid-item @click="onScanQr">
 		  		<view class="menu-item">
-		  			<uni-icons type="hand-up-filled" color="#007aff" :size="24"></uni-icons>
+		  			<uni-icons type="scan" color="#007aff" :size="24"></uni-icons>
 		  			扫码
 		  		</view>		 
 		   </uni-grid-item>
@@ -89,6 +89,7 @@ import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import { defaultAvatar } from '../../common/data';
 import { storeToRefs } from 'pinia'
 import { uploadFile } from '../../api/Request';
+import { useDecodeQRCode } from '../../common/useDecodeQRCode';
 
 const user = useUserStore()
 const scoreData = ref({starCount: 0, scores: []})
@@ -97,6 +98,7 @@ const starCount = computed(() =>  scoreData.value?.starCount || 0)
 const noticeText = computed(() => noticeData.value?.map(item => (`🎉恭喜${item.user.name}同学的${item.discipline.name}获得${item.level}🎉`)))
 const {loadUserBalance} = user
 const {balanceData} = storeToRefs(user)
+const {chooseImage} = useDecodeQRCode()
 
 onLoad(async () => {
 	await refreshData()
@@ -110,23 +112,18 @@ onPullDownRefresh(async() => {
 	}
 })
 
-function onScanQr() {
-	uni.navigateTo({
-		url: '/pages/scan-qrcode/scan-qrcode',
-		events:{
-			qrCodeData({text}) {
-				console.log("二维码内容", text)
-				if (text) {
-					uni.navigateTo({
-						url: '/pages/test-paper-track/test-paper-track?trackId=' + text
-					})
-				}
-			}
-		}
-	})
-	// uni.navigateTo({
-	// 	url: '/pages/test-paper-track/test-paper-track?trackId=' + 1
-	// })
+async function onScanQr() {
+	const text = await chooseImage()
+	if (text) {
+		uni.navigateTo({
+			url: '/pages/test-paper-track/test-paper-track?trackId=' + text
+		})
+	} else {
+		uni.showToast({
+			icon: 'none',
+			title: '未识别到二维码'
+		})
+	}
 }
 
 async function refreshData(showLoading = true) {

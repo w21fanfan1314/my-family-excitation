@@ -1,6 +1,8 @@
 <template>
 	<view class="test-paper-track" :style="{height: windowHeight}">
-		<view v-if="status === 'UNSTARTED'">
+		<uv-loading-page :loading="pageLoading" loading-text="加载试卷中..." image="/static/loading.gif" :icon-size="200"></uv-loading-page>
+		<tui-no-data v-if="notfound" img-url="/static/not-found-404.gif">未找到试卷</tui-no-data>
+		<view v-else-if="status === 'UNSTARTED'">
 			<uni-card :title="testPaperTrackData.name">
 				<view style="margin-bottom: 30rpx;">
 					<uv-text v-if="hasAward" :bold="true" :size="20" :text="award" style="margin-bottom: 30rpx;" type="error" 
@@ -127,6 +129,8 @@
 	})
 	const toast = ref()
 	const sucReceivedModal = ref()
+	const notfound = ref(false)
+	const pageLoading = ref(false)
 	const windowHeight = computed(() => uni.getWindowInfo().windowHeight + 'px')
 	const desc = computed(() => {
 		if (testPaperTrackData.value) {
@@ -192,18 +196,20 @@
 	}
 	
 	async function loadData() {
-		uni.showLoading({
-			title: '查询中...'
-		})
+		pageLoading.value = true
 		try {
 			const res = await showTestPaperTrack(formData.value)
 			if (res.code === 200) {
 				testPaperTrackData.value = res.data
 			} else {
-				uni.showToast({
-					icon: 'none',
-					title: res.msg
-				})
+				notfound.value = res?.code === 404
+				if (!(notfound.value)) {
+					uni.showToast({
+						icon: 'none',
+						title: res.msg
+					})
+				}
+				
 			}
 			return res
 		} catch(err) {
@@ -212,7 +218,7 @@
 				title: '查询试卷数据错误'
 			})
 		} finally {
-			uni.hideLoading()
+			pageLoading.value = false
 		}
 	}
 	

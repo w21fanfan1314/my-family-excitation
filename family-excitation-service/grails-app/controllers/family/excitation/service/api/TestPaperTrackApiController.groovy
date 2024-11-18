@@ -37,6 +37,10 @@ class TestPaperTrackApiController {
 
 
     private def checkTestPaperTrackForLogin(TestPaperTrack track) {
+        if (!track) {
+            respond new ApiResult(code: 404, msg: '未找到试卷')
+            return false
+        }
         def token = request.getHeader('app-token')
         Login loginInfo = Login.findByToken(token)
         User user = loginInfo?.user
@@ -44,7 +48,7 @@ class TestPaperTrackApiController {
             respond new ApiResult(code: 403, msg: '请先登录')
             return false
         }
-        if (track.user.id != user.id) {
+        if (track.user?.id != user.id) {
             respond new ApiResult(code: 403, msg: '这不是你的试卷')
             return false
         }

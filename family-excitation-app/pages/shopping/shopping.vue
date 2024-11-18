@@ -1,8 +1,10 @@
 <template>
 	<view class="shopping-container">
-		<tui-tabs :tabs="tabsData" :current-tab="tabSelectedIndex" @change="onTabChange"></tui-tabs>
-		<uni-search-bar is-full v-model="queryFormData.searchKey" placeholder="请输入你要的东西"
-		 @confirm="onSearch" @cancel="onSearchCancel"></uni-search-bar>
+		<uv-sticky bg-color="#ffffff">
+			<tui-tabs :tabs="tabsData" :current-tab="tabSelectedIndex" @change="onTabChange"></tui-tabs>
+			<uni-search-bar is-full v-model="queryFormData.searchKey" placeholder="请输入你要的东西"
+			 @confirm="onSearch" @cancel="onSearchCancel"></uni-search-bar>
+		</uv-sticky>
 		<tui-no-data v-if="isEmpty" btn-text="重新加载" @click="onReloadData">暂无商品</tui-no-data>
 		<tui-list-view :title="listTitle">
 			<tui-list-cell v-for="item in commoditiesData.commodities"
