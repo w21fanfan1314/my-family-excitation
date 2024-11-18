@@ -11,7 +11,7 @@
 				<uv-col :span="10">
 					<uv-button type="primary" text="选择图片" @click="onChooseImage"></uv-button>
 					<view v-if="codeData" style="margin-top: 40rpx;">
-						<uv-button type="success" text="确认打开" @click="onOpen" size="large"></uv-button>
+						<uv-button type="success" text="开始作答" @click="onOpen" size="large"></uv-button>
 					</view>
 				</uv-col>
 			</uv-row>
