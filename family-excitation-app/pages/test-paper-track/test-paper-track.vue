@@ -1,7 +1,7 @@
 <template>
 	<view class="test-paper-track" :style="{height: windowHeight}">
 		<uv-loading-page :loading="pageLoading" loading-text="加载试卷中..." image="/static/loading.gif" :icon-size="200"></uv-loading-page>
-		<tui-no-data v-if="notfound" img-url="/static/not-found-404.gif">未找到试卷</tui-no-data>
+		<tui-no-data v-if="!testPaperTrackRes || testPaperTrackRes?.code !== 200" img-url="/static/not-found-404.gif">{{testPaperTrackRes?.msg}}</tui-no-data>
 		<view v-else-if="status === 'UNSTARTED'">
 			<uni-card :title="testPaperTrackData.name">
 				<view style="margin-bottom: 30rpx;">
@@ -107,6 +107,7 @@
 	import { computed, ref } from 'vue';
 	import moment from 'moment';
 	
+	const testPaperTrackRes = ref()
 	const testPaperTrackData = ref({
 		name: '',
 		totalScore: 0,
@@ -129,7 +130,6 @@
 	})
 	const toast = ref()
 	const sucReceivedModal = ref()
-	const notfound = ref(false)
 	const pageLoading = ref(false)
 	const windowHeight = computed(() => uni.getWindowInfo().windowHeight + 'px')
 	const desc = computed(() => {
@@ -199,17 +199,14 @@
 		pageLoading.value = true
 		try {
 			const res = await showTestPaperTrack(formData.value)
+			testPaperTrackRes.value = res
 			if (res.code === 200) {
 				testPaperTrackData.value = res.data
 			} else {
-				notfound.value = res?.code === 404
-				if (!(notfound.value)) {
-					uni.showToast({
-						icon: 'none',
-						title: res.msg
-					})
-				}
-				
+				// uni.showToast({
+				// 	icon: 'none',
+				// 	title: res.msg
+				// })
 			}
 			return res
 		} catch(err) {
