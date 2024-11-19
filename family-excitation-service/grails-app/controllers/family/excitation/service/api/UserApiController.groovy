@@ -11,6 +11,7 @@ import family.excitation.service.UserRecord
 import family.excitation.service.LoginService
 import family.excitation.service.LoginType
 import family.excitation.service.User
+import family.excitation.service.UserRecordType
 import family.excitation.service.UserService
 
 import java.time.Instant
@@ -205,14 +206,44 @@ class UserApiController {
         respond new ApiResult(code: 200, msg: '查询成功', data: scores)
     }
 
-    def userRecords(User user, Integer page, Integer size) {
+    def userRecords(User user, Integer page, Integer size, Long beginTime, Long endTime) {
+        UserRecordType type;
+        if (params.type) {
+            type = UserRecordType.valueOf(params.type)
+        }
+        def withPage = params.boolean("withPage", true)
         def records = UserRecord.createCriteria().list {
             eq('user', user)
             order('dateCreated', 'desc')
-            maxResults(size)
-            firstResult(page * size)
+            if (type) {
+                eq('type', type)
+            }
+            if (beginTime && endTime) {
+                between('dateCreated', new Date(beginTime), new Date(endTime))
+            }
+            if (withPage) {
+                maxResults(size)
+                firstResult(page * size)
+            }
         }
-        respond new ApiResult(code: 200, msg: '查询成功', data: [records: records, total: UserRecord.countByUser(user)])
+        def rowCount
+        if (withPage) {
+            rowCount = UserRecord.createCriteria().get {
+                eq('user', user)
+                if (type) {
+                    eq('type', type)
+                }
+                if (beginTime && endTime) {
+                    between('dateCreated', new Date(beginTime), new Date(endTime))
+                }
+                projections {
+                    rowCount()
+                }
+            }
+        } else {
+            rowCount = records.size()
+        }
+        respond new ApiResult(code: 200, msg: '查询成功', data: [records: records, total: rowCount])
     }
 
 

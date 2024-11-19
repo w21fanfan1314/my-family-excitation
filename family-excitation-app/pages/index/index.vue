@@ -44,7 +44,7 @@
 		   </uni-grid-item>
 	  </uni-grid>
     </uni-card>
-
+	<user-income-expenditure-card></user-income-expenditure-card>
     <uni-section type="line" title="我的资产">
 		<template v-slot:right>
 			<navigator :url="'/pages/record/record?userId=' + user.userInfo?.id">
@@ -90,6 +90,7 @@ import { defaultAvatar } from '../../common/data';
 import { storeToRefs } from 'pinia'
 import { uploadFile } from '../../api/Request';
 import { useDecodeQRCode } from '../../common/useDecodeQRCode';
+import UserIncomeExpenditureCard from './components/user-income-expenditure-card.vue';
 
 const user = useUserStore()
 const scoreData = ref({starCount: 0, scores: []})
