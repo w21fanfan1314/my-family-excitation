@@ -144,7 +144,9 @@
 			"path" : "pages/lottery/lottery",
 			"style" : 
 			{
-				"navigationBarTitleText" : ""
+				"navigationBarTitleText" : "抽奖",
+				"navigationBarBackgroundColor": "#dd524d",
+				"navigationBarTextStyle": "white"
 			}
 		}
 	],
