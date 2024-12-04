@@ -1,19 +1,19 @@
 {
-  "hash": "d79c2a33",
-  "configHash": "4d13ec56",
+  "hash": "6875b009",
+  "configHash": "5da89c02",
   "lockfileHash": "f46fabbd",
-  "browserHash": "71c846a7",
+  "browserHash": "10de893a",
   "optimized": {
     "jsqr": {
       "src": "../../../../../node_modules/jsqr/dist/jsQR.js",
       "file": "jsqr.js",
-      "fileHash": "cfea51fb",
+      "fileHash": "fc78217f",
       "needsInterop": true
     },
     "moment": {
       "src": "../../../../../node_modules/moment/dist/moment.js",
       "file": "moment.js",
-      "fileHash": "3d20d233",
+      "fileHash": "f351aae6",
       "needsInterop": false
     }
   },
