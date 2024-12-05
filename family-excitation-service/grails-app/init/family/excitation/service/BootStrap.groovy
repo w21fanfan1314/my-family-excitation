@@ -20,6 +20,7 @@ class BootStrap {
     UserRecordService userRecordService
     TrainService trainService
     TestPaperTrackService testPaperTrackService
+    LotteryService lotteryService
 
     def init = { servletContext ->
         environments {
@@ -125,6 +126,13 @@ class BootStrap {
                 trainService.save(new Train(name: '语文大闯关', category: '语文'))
 
                 testPaperTrackService.save(new TestPaperTrack(user: martin, currency: rmb, award: 10))
+
+                lotteryService.save(new Lottery(name: "现金10元", image: 'https://png.pngtree.com/element_our/20190529/ourmid/pngtree-round-cartoon-gold-coin-image_1194649.jpg', type: LotteryType.AMOUNT, amount: 10, currency: rmb))
+                lotteryService.save(new Lottery(name: "现金2元", image: 'https://png.pngtree.com/element_our/20190529/ourmid/pngtree-round-cartoon-gold-coin-image_1194649.jpg', type: LotteryType.AMOUNT, amount: 2, currency: rmb))
+                lotteryService.save(new Lottery(name: "现金5元", image: 'https://png.pngtree.com/element_our/20190529/ourmid/pngtree-round-cartoon-gold-coin-image_1194649.jpg', type: LotteryType.AMOUNT, amount: 5, currency: rmb))
+                lotteryService.save(new Lottery(name: "遥控车", image: 'https://bpic.588ku.com/element_pic/24/01/23/d4341d55b19a3a700dfc1b27dc2fbb84.png!/fw/350/quality/99/unsharp/true/compress/true', type: LotteryType.THING))
+                lotteryService.save(new Lottery(name: "精美小礼品", image: 'https://i-1.lanrentuku.com/2020/11/3/a7999f21-c054-4439-93ea-46221bbd5bfb.png', type: LotteryType.THING))
+                lotteryService.save(new Lottery(name: "铅笔", image: 'https://img95.699pic.com/xsj/14/lh/rp.jpg!/fw/700/watermark/url/L3hzai93YXRlcl9kZXRhaWwyLnBuZw/align/southeast', type: LotteryType.THING))
             }
             production {
                 if (!User.findByUserName("admin")) {

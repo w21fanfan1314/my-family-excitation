@@ -10,6 +10,8 @@ class User {
     String password
     Date birthday
     String avatar
+    // 抽奖机会
+    int lotteryChance = 0
     UserGender gender = UserGender.MALE
     UserRole role = UserRole.USER
     UserPosition position = UserPosition.CHILD
@@ -39,6 +41,7 @@ class User {
         userAnswers nullable: true
         transcripts nullable: true
         paperTracks nullable: true
+        lotteryChance min: 0
     }
 
     static mapping = {

@@ -38,7 +38,9 @@ enum UserRecordType {
     // 转出
     TRANSFER_OUT,
     // 利息
-    INTEREST
+    INTEREST,
+    // 抽奖
+    LOTTERY
 
     @Override
     String toString() {
@@ -57,6 +59,8 @@ enum UserRecordType {
                 return "转出"
             case INTEREST:
                 return "利息"
+            case LOTTERY:
+                return "抽奖"
             default:
                 return "未知"
         }
