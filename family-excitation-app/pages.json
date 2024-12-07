@@ -148,6 +148,14 @@
 				"navigationBarBackgroundColor": "#dd524d",
 				"navigationBarTextStyle": "white"
 			}
+		},
+		{
+			"path" : "pages/videos/bilibili",
+			"style" : 
+			{
+				"navigationBarTitleText" : "视频",
+				"enablePullDownRefresh": true
+			}
 		}
 	],
 	"globalStyle": {

@@ -21,12 +21,13 @@ class BootStrap {
     TrainService trainService
     TestPaperTrackService testPaperTrackService
     LotteryService lotteryService
+    VideoItemService videoItemService
 
     def init = { servletContext ->
         environments {
             development {
                 // 创建一个管理员
-                userService.save(new User(name: 'admin', userName: 'admin', password: 'asdf.1234', role: UserRole.ADMIN, position: UserPosition.PARENT))
+                userService.save(new User(name: 'admin', userName: 'admin', password: 'asdf.1234', role: UserRole.ADMIN, position: UserPosition.PARENT, lotteryChance: 100))
                 userService.save(new User(name: '刘泯铄', userName: 'marvin', password: '123456', role: UserRole.USER, position: UserPosition.CHILD))
                 def martin = userService.save(new User(name: '王泯泽', userName: 'martin', password: '123456', role: UserRole.USER, position: UserPosition.CHILD, birthday: new Date(115, 6, 10)))
 
@@ -133,6 +134,10 @@ class BootStrap {
                 lotteryService.save(new Lottery(name: "遥控车", image: 'https://bpic.588ku.com/element_pic/24/01/23/d4341d55b19a3a700dfc1b27dc2fbb84.png!/fw/350/quality/99/unsharp/true/compress/true', type: LotteryType.THING))
                 lotteryService.save(new Lottery(name: "精美小礼品", image: 'https://i-1.lanrentuku.com/2020/11/3/a7999f21-c054-4439-93ea-46221bbd5bfb.png', type: LotteryType.THING))
                 lotteryService.save(new Lottery(name: "铅笔", image: 'https://img95.699pic.com/xsj/14/lh/rp.jpg!/fw/700/watermark/url/L3hzai93YXRlcl9kZXRhaWwyLnBuZw/align/southeast', type: LotteryType.THING))
+
+                videoItemService.save(new VideoItem(category: '搞笑', name: '你投的币最后都去哪儿了？', url: 'https://cn-gdfs-ct-01-05.bilivideo.com/upgcxcode/56/97/26790199756/26790199756-1-16.mp4?e=ig8euxZM2rNcNbRVhwdVhwdlhWdVhwdVhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&uipk=5&nbs=1&deadline=1733573953&gen=playurlv2&os=bcache&oi=0&trid=0000f2d42602597e482c9bf2628473df28fch&mid=0&platform=html5&og=cos&upsig=2ec3c1c2a01e9f1ac95a6dd3e0c0d505&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform,og&cdnid=60905&bvc=vod&nettype=0&f=h_0_0&bw=48093&logo=80000000'))
+                videoItemService.save(new VideoItem(category: '直播', name: '顶级阳谋，全体吃屎！', url: 'http://60.10.167.88:808/hls/57/index.m3u8'))
+                videoItemService.save(new VideoItem(category: "搞笑", name: '帮我办个医院VIP ｜巴卫', url: 'https://cn-gdfs-ct-01-15.bilivideo.com/upgcxcode/88/54/26775195488/26775195488-1-16.mp4?e=ig8euxZM2rNcNbRVhwdVhwdlhWdVhwdVhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&uipk=5&nbs=1&deadline=1733575208&gen=playurlv2&os=bcache&oi=0&trid=000089e051199f494e759d0d156738625a93h&mid=0&platform=html5&og=hw&upsig=e72d0aa32e11699953b125be860395ed&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform,og&cdnid=60915&bvc=vod&nettype=0&f=h_0_0&bw=56360&logo=80000000'))
             }
             production {
                 if (!User.findByUserName("admin")) {
@@ -171,7 +176,8 @@ class BootStrap {
                     role: it.role,
                     position: it.position,
                     dateCreated: it.dateCreated,
-                    lastUpdated: it.lastUpdated
+                    lastUpdated: it.lastUpdated,
+                    lotteryChance: it.lotteryChance
             ]
         }
         JSON.registerObjectMarshaller(Discipline) {
@@ -368,21 +374,44 @@ class BootStrap {
         }
         JSON.registerObjectMarshaller(TestPaperTrack) {
             return [
-                    id: it.id,
-                    user: it.user,
-                    name: it.name,
-                    status: it.status,
-                    totalScore: it.totalScore,
-                    qualifiedScore: it.qualifiedScore,
-                    score: it.score,
-                    startTime: it.startTime,
-                    endTime: it.endTime,
-                    award: it.award,
-                    actualAward: it.actualAward,
-                    currency: it.currency,
+                    id             : it.id,
+                    user           : it.user,
+                    name           : it.name,
+                    status         : it.status,
+                    totalScore     : it.totalScore,
+                    qualifiedScore : it.qualifiedScore,
+                    score          : it.score,
+                    startTime      : it.startTime,
+                    endTime        : it.endTime,
+                    award          : it.award,
+                    actualAward    : it.actualAward,
+                    currency       : it.currency,
                     answerLimitTime: it.answerLimitTime,
+                    dateCreated    : it.dateCreated,
+                    lastUpdated    : it.lastUpdated
+            ]
+        }
+        JSON.registerObjectMarshaller(Lottery) {
+            return [
+                    id             : it.id,
+                    name           : it.name,
+                    image          : it.image,
+                    amount         : it.amount,
+                    currency       : it.currency,
+                    type           : it.type,
+                    dateCreated    : it.dateCreated,
+                    lastUpdated    : it.lastUpdated
+            ]
+        }
+
+        JSON.registerObjectMarshaller(LotteryRecords) {
+            return [
+                    id         : it.id,
+                    user       : it.user,
+                    lottery    : it.lottery,
                     dateCreated: it.dateCreated,
-                    lastUpdated: it.lastUpdated
+                    lastUpdated: it.lastUpdated,
+                    exchanged  : it.exchanged
             ]
         }
     }

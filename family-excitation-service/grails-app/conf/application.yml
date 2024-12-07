@@ -84,7 +84,7 @@ grails:
         cache:
             maxsize: 1000
     controllers:
-        defaultScope: request #singleton
+        defaultScope: singleton #singleton
         upload:
             maxFileSize: 31457280
             maxRequestSize: 31457280

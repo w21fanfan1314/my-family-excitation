@@ -1,7 +1,7 @@
 <template>
 	<view class="user-income-expenditure-card">
 		<uni-section :loading="loading" title="最近7天收支" type="line">
-			<swiper :indicator-dots="true" :autoplay="true" >
+			<swiper :indicator-dots="false" :autoplay="true" >
 				<swiper-item>
 					<uni-card  title="人民币">
 						<uv-row :gutter="12">

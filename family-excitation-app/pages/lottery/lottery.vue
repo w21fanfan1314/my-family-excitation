@@ -5,11 +5,13 @@
 				幸运大抽奖
 			</view>
 			<view class="lottery-grid">
-				<view v-for="(item, index) in prizeData" :key="'prize-item-'+ item.index" 
+				<view v-for="(item, index) in randomPrizeData" :key="'prize-item-'+ item.index" 
 					class="lottery-item" :class="[index % 3 === 0 ? 'first' : '', index < 3 ? 'top' : '', 
 						selectedPrizeIndex === item.index ? 'selected' : '', item.index === -2 ? 'show' : '']">
 					<template v-if="item.index === -2">
-						<image class="user-image" mode="aspectFill"></image>
+						<image class="user-image" mode="aspectFill" :src="user.userInfo?.avatar || defaultAvatar"></image>
+						<uv-gap height="20rpx"></uv-gap>
+						<uv-text :size="16" color="#000" :text="user.userInfo?.name" align="center"></uv-text>
 					</template>
 					<template v-else class="prize-item">
 						<image :src="item.image" class="prize-image" mode="aspectFill"></image>
@@ -18,8 +20,10 @@
 				</view>
 			</view>
 			<view class="lottery-bottom">
+				<uv-text :text="'还剩抽次数: ' + lotteryChance + '次'" color="white" :bold="true" align="center"></uv-text>
+				<uv-gap height="30rpx"></uv-gap>
 				<tui-button type="primary" shape="circle" :loading="loading" :prevent-click="true"
-					@click="handlestartClick">开始抽奖</tui-button>
+					@click="handleStartClick" :disabled="lotteryChance === 0">开始抽奖</tui-button>
 				<uv-gap height="30rpx"></uv-gap>
 				<tui-button type="green" shape="circle" :plain="false" :prevent-click="true" @click="handleMyWinClick">我的奖品</tui-button>
 			</view>
@@ -35,20 +39,16 @@
 	import { computed, ref } from 'vue';
 	import WinModal from './components/win-modal.vue';
 	import WinningRecordsModal from './components/winning-records-modal.vue';
+	import {giveLotteries, saveLotteryRecords} from '@/api/Lottery.js'
+	import _ from 'lodash'
+	import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
+	import { useUserStore } from '../../store/user';
+	import { defaultAvatar } from '../../common/data';
 	
 	
-
-	const prizeData = ref([
-		{ index: 0, win: true, name: '谢谢参与', image: 'https://pic.chaopx.com/chao_origin_pic/23/06/02/fec76841a2f0cd2d71647ae458f6a3df.jpg!/fw/452/quality/90/unsharp/true/compress/true'},
-		{ index: 1, win: true, name: '谢谢参与', image: 'https://pic.chaopx.com/chao_origin_pic/23/06/02/fec76841a2f0cd2d71647ae458f6a3df.jpg!/fw/452/quality/90/unsharp/true/compress/true'},
-		{ index: 2, win: true, name: '谢谢参与', image: 'https://pic.chaopx.com/chao_origin_pic/23/06/02/fec76841a2f0cd2d71647ae458f6a3df.jpg!/fw/452/quality/90/unsharp/true/compress/true'},
-		{ index: 7, win: true, name: '谢谢参与', image: 'https://pic.chaopx.com/chao_origin_pic/23/06/02/fec76841a2f0cd2d71647ae458f6a3df.jpg!/fw/452/quality/90/unsharp/true/compress/true'},
-		{ index: -2, name: '谢谢参与', image: 'https://pic.chaopx.com/chao_origin_pic/23/06/02/fec76841a2f0cd2d71647ae458f6a3df.jpg!/fw/452/quality/90/unsharp/true/compress/true'},
-		{ index: 3, name: '谢谢参与', image: 'https://pic.chaopx.com/chao_origin_pic/23/06/02/fec76841a2f0cd2d71647ae458f6a3df.jpg!/fw/452/quality/90/unsharp/true/compress/true'},
-		{ index: 6, name: '谢谢参与', image: 'https://pic.chaopx.com/chao_origin_pic/23/06/02/fec76841a2f0cd2d71647ae458f6a3df.jpg!/fw/452/quality/90/unsharp/true/compress/true'},
-		{ index: 5, name: '谢谢参与', image: 'https://pic.chaopx.com/chao_origin_pic/23/06/02/fec76841a2f0cd2d71647ae458f6a3df.jpg!/fw/452/quality/90/unsharp/true/compress/true'},
-		{ index: 4, name: '谢谢参与', image: 'https://pic.chaopx.com/chao_origin_pic/23/06/02/fec76841a2f0cd2d71647ae458f6a3df.jpg!/fw/452/quality/90/unsharp/true/compress/true'}
-	])
+	const user = useUserStore()
+	const indexs = [0, 1, 2, 7, -2, 3, 6, 5, 4]
+	const prizeData = ref()
 	const selectedPrizeIndex = ref(-1)
 	const loading = ref(false)
 	// ready starting end
@@ -56,25 +56,71 @@
 	const noWinning = ref(false)
 	const winModal = ref()
 	const winningRecordModal = ref()
+	const queryFormData = ref({
+		count: 5
+	})
+	// 中奖的概率 1-100
+	const probabilityWinning = ref(10)
+	// 抽中的奖品
+	const winData = ref()
+	// 所有参与抽奖的数据
+	const randomPrizeData = computed(() => {
+		const result = prizeData.value?.map((item) => ({
+					name: item.name,
+					image: item.image,
+					win: true, 
+					index: 0,
+					id: item.id,
+					type: item.type?.name
+				})) || []
+		const count = result.length
+		for (let i = count; i < 9; i ++) {
+			result.push({
+				name: '谢谢参与', 
+				image: '/static/lottery-default.jpg',
+				win: false, 
+				index: 0,
+				id: 0,
+			})
+		}
+		const rand = _.shuffle(result)		
+		for (let i = 0; i < rand.length; i ++) {
+			rand[i].index = indexs[i]
+		}
+		return rand
+	})
+	// 所有的奖品
+	const allWinningData = computed(() => {
+		return randomPrizeData.value?.filter(item => Boolean(item.win))
+	})
+	// 谢谢参与的商品
+	const allSubstituteData = computed(() => {
+		return randomPrizeData.value?.filter(item => !Boolean(item.win))
+	})
+	// 抽奖机会
+	const lotteryChance = computed(() => user.userInfo?.lotteryChance || 0)
+	
 	
 	const windowHeight = computed(() => uni.getWindowInfo().windowHeight + 'px')
-	const winData = computed(() => {
-		if (selectedPrizeIndex.value < prizeData.value.length && selectedPrizeIndex.value >= 0) {
-			return prizeData.value[selectedPrizeIndex.value]
-		}
-		return null
+	
+	onLoad(async() => {
+	    await user.userDetail({userId: user.userInfo.id})
+		await loadPrizeData()
 	})
+	
 	
 	function handleMyWinClick() {
 		winningRecordModal.value?.open()
 	}
 	
-	async function handlestartClick() {
+	async function handleStartClick() {
 		if (status.value === 'ready') {
 			selectedPrizeIndex.value = 0
 			status.value = "start"
-			await startLottery()
-			if (winData.value.win) {
+			const result = await startLottery()
+			winData.value = result.winData
+			await getYourPrize()
+			if (winData.value?.win) {
 				winModal.value?.open(winData.value)
 			} else {
 				noWinning.value = true
@@ -84,25 +130,95 @@
 	}
 	
 	function startLottery() {
-		return new Promise(reslove => {
+		return new Promise(async (reslove) => {
 			loading.value = true
 			let index = 0
-			const winIndex = Math.floor((Math.random() * 8) + 24)
+			let {winIndex, randomIndex} = await randomWinIndex()
 			const timer = setInterval(() => {
-				if (index === winIndex) {
-					clearInterval(timer)
-					reslove(winIndex)
-					loading.value = false
-					return
-				}
-				if (selectedPrizeIndex.value + 1 === prizeData.value.length) {
+				index ++
+				if (selectedPrizeIndex.value + 2 === randomPrizeData.value.length) {
 					selectedPrizeIndex.value = 0
 				} else {
 					selectedPrizeIndex.value ++
 				}
-				index ++
+				if (index === randomIndex) {
+					clearInterval(timer)
+					reslove({winData: randomPrizeData.value.find(item => item.index === selectedPrizeIndex.value), index: selectedPrizeIndex.value})
+					loading.value = false
+					return
+				}
 			}, 100)
 		})
+	}
+	
+	async function randomWinIndex() {
+		const probability = _.random(1, 100, false)
+		// 本次是否中奖
+		const isWinning = probability <= probabilityWinning.value
+		let winIndex = 0
+		const val = 24
+		if (isWinning) {
+			winIndex = _.sample(allWinningData.value).index
+		} else {
+			winIndex = _.sample(allSubstituteData.value).index
+		}
+		return {winIndex, randomIndex: winIndex + val}
+	}
+	
+	async function loadPrizeData() {
+	    uni.showLoading({
+	        title: '获取奖品中'
+	    });
+	    try {
+	        const res = await giveLotteries(queryFormData.value)
+	        if (res.code === 200) {
+	            prizeData.value = res?.data || []
+	        } else {
+	            uni.showToast({
+	                title: res.msg,
+	                icon: 'none'
+	            });
+	        }
+	    } catch(err) {
+			console.log("获取奖品异常", err)
+	        uni.showToast({
+	            title: '获取奖品失败',
+	            icon: 'none'
+	        });
+	    } finally {
+	        uni.hideLoading();
+	    }
+	}
+	
+	async function getYourPrize() {
+	    uni.showLoading({
+	        title: '领取中'
+	    });
+	    try {
+	        const res = await saveLotteryRecords({
+				"lottery.id": winData.value.id
+			})
+	        if (res.code === 200) {
+	            await user.userDetail({userId: user.userInfo.id})
+				if (winData.value.type === 'AMOUNT') {
+					await user.loadUserBalance()
+				}
+	        } else {
+	            uni.showToast({
+	                title: res.msg,
+	                icon: 'none'
+	            });
+	        }
+			return res
+	    } catch(err) {
+			console.log("领取奖品异常", err)
+	        uni.showToast({
+	            title: '领取奖品失败',
+	            icon: 'none'
+	        });
+	    } finally {
+	        uni.hideLoading();
+	    }
 	}
 </script>
 
@@ -111,6 +227,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		background-color: $uni-color-error;
 		.lottery {
 			$grid-width: 600rpx;
 			display: flex;

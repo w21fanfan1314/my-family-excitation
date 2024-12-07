@@ -21,7 +21,7 @@
 			  </navigator>
 		  </uni-grid-item>
 		  <uni-grid-item>
-		  	<navigator url="/pages/releaseInformation/releaseInformation">
+		  	<navigator url="/pages/videos/bilibili">
 		  		<view class="menu-item">
 		  			<uni-icons type="pyq" color="#007aff" :size="24"></uni-icons>
 		  			视频
@@ -36,15 +36,23 @@
 				</view>
 			</navigator>	 
 		  </uni-grid-item> -->
-		  <uni-grid-item @click="onScanQr">
+		 <!-- <uni-grid-item @click="onScanQr">
 		  		<view class="menu-item">
 		  			<uni-icons type="scan" color="#007aff" :size="24"></uni-icons>
 		  			扫码
 		  		</view>		 
-		   </uni-grid-item>
+		   </uni-grid-item> -->
+		   <uni-grid-item>
+		   		<navigator url="/pages/lottery/lottery">
+					<view class="menu-item">
+						<uni-icons type="vip-filled" color="#007aff" :size="24"></uni-icons>
+						抽奖
+					</view>		
+				</navigator> 
+		    </uni-grid-item>
 	  </uni-grid>
     </uni-card>
-	<user-income-expenditure-card></user-income-expenditure-card>
+	<!-- <user-income-expenditure-card></user-income-expenditure-card> -->
     <uni-section type="line" title="我的资产">
 		<template v-slot:right>
 			<navigator :url="'/pages/record/record?userId=' + user.userInfo?.id">
