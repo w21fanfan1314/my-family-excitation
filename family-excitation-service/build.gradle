@@ -82,6 +82,7 @@ dependencies {
 
     implementation 'mysql:mysql-connector-java:8.0.28'
 //    implementation "org.bytedeco:javacv-platform:1.5.10"
+    implementation 'org.grails.plugins:quartz:3.0.0'
 }
 
 bootRun {

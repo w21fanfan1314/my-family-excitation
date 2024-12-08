@@ -22,8 +22,16 @@ class BootStrap {
     TestPaperTrackService testPaperTrackService
     LotteryService lotteryService
     VideoItemService videoItemService
+    AppConfigService appConfigService
 
     def init = { servletContext ->
+        // 初始化配置
+        def appConfigs = AppConfig.list()
+        if (appConfigs.empty) {
+            appConfigService.save(new AppConfig())
+        } else {
+            AppConfig.instance = appConfigs.last()
+        }
         environments {
             development {
                 // 创建一个管理员
@@ -40,6 +48,9 @@ class BootStrap {
                 for( int i = 0; i < 100; i ++) {
                     userRecordService.save(new UserRecord(user: martin, recordType: UserRecordType.RECHARGE, amount: RandomUtils.nextInt(1, 10), currency: rmb))
                 }
+
+                AppConfig.instance?.currency = rmb
+                appConfigService.save(AppConfig.instance)
 
                 disciplineService.save(new Discipline(name: '数学'))
                 disciplineService.save(new Discipline(name: '语文'))

@@ -58,6 +58,14 @@ class Score {
             }
         }
 
+        if (award == 0) {
+            award = AppConfig.instance.aAward
+        }
+
+        if (!awardCurrency) {
+            awardCurrency = AppConfig.instance.currency
+        }
+
         if (award > 0 && awardCurrency) {
             UserRecord userRecord = new UserRecord(user: user, recordType: UserRecordType.AWARD, amount: award, content: "奖励${discipline.name}获得了${level}的成绩", currency: awardCurrency)
             UserRecord.withTransaction {

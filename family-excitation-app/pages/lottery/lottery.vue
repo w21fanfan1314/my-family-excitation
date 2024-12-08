@@ -1,8 +1,13 @@
 <template>
-	<view class="lottery-container" :style="{height: windowHeight}">
+	<view class="lottery-container" :style="{minHeight: windowHeight}">
 		<view class="lottery">
 			<view class="lottery-header">
-				幸运大抽奖
+				<view style="display: flex; flex-direction: row; align-items: center;">
+					幸运大抽奖
+					<view class="uni-ml-2">
+						<uv-icon size="40rpx" color="uv-color-error" name="reload" @click="loadPrizeData"></uv-icon>
+					</view>
+				</view>
 			</view>
 			<view class="lottery-grid">
 				<view v-for="(item, index) in randomPrizeData" :key="'prize-item-'+ item.index" 
