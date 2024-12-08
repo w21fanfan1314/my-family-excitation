@@ -8,8 +8,8 @@ class Discipline {
     static hasMany = [scores: Score, homeworkReports: HomeworkReport]
     static constraints = {
         name unique: true, maxSize: 50
-        scores nullable: true
-        homeworkReports nullable: true
+        scores nullable: true, display: false
+        homeworkReports nullable: true, display: false
     }
 
     @Override

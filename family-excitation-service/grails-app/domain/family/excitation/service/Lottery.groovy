@@ -14,7 +14,7 @@ class Lottery {
         name minSize: 1, maxSize: 50
         image url: true
         amount min: 0d
-        records nullable: true
+        records nullable: true, display: false
         currency nullable: true
     }
 

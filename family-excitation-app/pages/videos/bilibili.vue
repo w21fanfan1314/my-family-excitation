@@ -6,7 +6,7 @@
 		<tui-list-view>
 			<tui-list-cell v-for="item in videoData.items" :key="'video-item-' + item.id">
 				<view class="video-item">
-					<video style="width: 100%;" :src="item.url"></video>
+					<video style="width: 100%;" :src="item.url" :poster="item.thumbnail"></video>
 					<uv-gap height="20rpx"></uv-gap>
 					<uv-text :size="16" :bold="true" color="uni-text-color" :text="item.name"></uv-text>
 				</view>

@@ -31,17 +31,17 @@ class User {
         password minSize: 6, maxSize: 16
         birthday nullable: true
         avatar nullable: true
-        logins nullable: true
-        records nullable: true
-        statisitics nullable: true
-        scores nullable: true
-        orders nullable: true
-        releases nullable: true
-        mediaDataList nullable: true
-        userAnswers nullable: true
-        transcripts nullable: true
-        paperTracks nullable: true
-        lotteryChance min: 0
+        logins nullable: true, display: false
+        records nullable: true, display: false
+        statisitics nullable: true, display: false
+        scores nullable: true, display: false
+        orders nullable: true, display: false
+        releases nullable: true, display: false
+        mediaDataList nullable: true, display: false
+        userAnswers nullable: true, display: false
+        transcripts nullable: true, display: false
+        paperTracks nullable: true, display: false
+        lotteryChance min: 0, display: false
     }
 
     static mapping = {
