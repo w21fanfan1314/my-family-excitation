@@ -4,7 +4,7 @@
 			<uv-tabs :list="categories" @change="handleTabChange"></uv-tabs>
 		</uv-sticky>
 		<tui-list-view>
-			<tui-list-cell v-for="item in videoData.items" :key="'video-item-' + item.id">
+			<tui-list-cell v-for="item in videoData.items" :key="'video-item-' + item.id" :hover="false">
 				<view class="video-item">
 					<video style="width: 100%;" :src="item.url" :poster="item.thumbnail"></video>
 					<uv-gap height="20rpx"></uv-gap>

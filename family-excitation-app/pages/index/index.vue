@@ -21,7 +21,7 @@
 			  </navigator>
 		  </uni-grid-item>
 		  <uni-grid-item>
-		  	<navigator url="/pages/videos/bilibili">
+		  	<navigator url="/pages/videos/bilibili-web">
 		  		<view class="menu-item">
 		  			<uni-icons type="pyq" color="#007aff" :size="24"></uni-icons>
 		  			视频

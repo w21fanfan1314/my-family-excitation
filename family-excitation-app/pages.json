@@ -156,6 +156,13 @@
 				"navigationBarTitleText" : "视频",
 				"enablePullDownRefresh": true
 			}
+		},
+		{
+			"path" : "pages/videos/bilibili-web",
+			"style" : 
+			{
+				"navigationBarTitleText" : "视频"
+			}
 		}
 	],
 	"globalStyle": {
