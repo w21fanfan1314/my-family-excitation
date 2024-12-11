@@ -8,7 +8,7 @@ class LotteryRecords {
 
     static belongsTo = [user: User, lottery: Lottery]
     static constraints = {
-        dateCreated nullable: true
+        exchanged nullable: false
         lottery nullable: true
     }
 

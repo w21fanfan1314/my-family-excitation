@@ -5,7 +5,7 @@
 				<view style="display: flex; flex-direction: row; align-items: center;">
 					幸运大抽奖
 					<view class="uni-ml-2">
-						<uv-icon size="40rpx" color="uv-color-error" name="reload" @click="loadPrizeData"></uv-icon>
+						<uv-icon size="40rpx" color="uv-color-error" name="reload" @click="handleReloadLottery"></uv-icon>
 					</view>
 				</view>
 			</view>
@@ -65,7 +65,7 @@
 		count: 5
 	})
 	// 中奖的概率 1-100
-	const probabilityWinning = ref(10)
+	const probabilityWinning = ref(0)
 	// 抽中的奖品
 	const winData = ref()
 	// 所有参与抽奖的数据
@@ -113,6 +113,9 @@
 		await loadPrizeData()
 	})
 	
+	async function handleReloadLottery() {
+		await loadPrizeData()
+	}
 	
 	function handleMyWinClick() {
 		winningRecordModal.value?.open()
@@ -120,6 +123,7 @@
 	
 	async function handleStartClick() {
 		if (status.value === 'ready') {
+			probabilityWinning.value = _.random(20, 50, false)
 			selectedPrizeIndex.value = 0
 			status.value = "start"
 			const result = await startLottery()

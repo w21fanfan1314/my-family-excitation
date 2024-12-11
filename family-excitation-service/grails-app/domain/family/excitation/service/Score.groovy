@@ -63,7 +63,7 @@ class Score {
         }
 
         if (!awardCurrency) {
-            awardCurrency = AppConfig.instance.currency
+            awardCurrency = Currency.get(AppConfig.instance.currency?.id)
         }
 
         if (award > 0 && awardCurrency) {

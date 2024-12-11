@@ -31,6 +31,7 @@ class User {
         password minSize: 6, maxSize: 16
         birthday nullable: true
         avatar nullable: true
+        lotteryChance min: 0
         logins nullable: true, display: false
         records nullable: true, display: false
         statisitics nullable: true, display: false
@@ -41,7 +42,6 @@ class User {
         userAnswers nullable: true, display: false
         transcripts nullable: true, display: false
         paperTracks nullable: true, display: false
-        lotteryChance min: 0, display: false
     }
 
     static mapping = {
