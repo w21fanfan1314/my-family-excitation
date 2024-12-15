@@ -161,7 +161,7 @@ environments:
     development:
         familyExcitation:
             upload:
-                path: D:\\Downloads\\uploads
+                path: /Users/mattleo/Downloads
     production:
         familyExcitation:
             upload:

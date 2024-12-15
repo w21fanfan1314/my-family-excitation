@@ -163,6 +163,14 @@
 			{
 				"navigationBarTitleText" : "视频"
 			}
+		},
+		{
+			"path" : "pages/videos/detail",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {

@@ -6,7 +6,7 @@ class MediaDataApiController {
     UploadService uploadService
     def show(MediaData mediaData) {
         if (mediaData.localPath) {
-            render file: new File(mediaData.localPath), fileName: mediaData.name
+            render file: new File(mediaData.localPath), fileName: mediaData.name, contentType: mediaData.contentType
         } else if (mediaData.url) {
             redirect url: mediaData.url
         } else {

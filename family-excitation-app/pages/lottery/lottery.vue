@@ -311,6 +311,7 @@
 						width: $prize-image-size;
 						height: $prize-image-size;
 						border-radius: $prize-image-size / 2;
+						border: 1px solid $uni-color-error;
 					}
 					
 					&.selected {

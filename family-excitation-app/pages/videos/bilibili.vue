@@ -4,9 +4,10 @@
 			<uv-tabs :list="categories" @change="handleTabChange"></uv-tabs>
 		</uv-sticky>
 		<tui-list-view>
-			<tui-list-cell v-for="item in videoData.items" :key="'video-item-' + item.id" :hover="false">
+			<tui-list-cell v-for="item in videoData.items" :key="'video-item-' + item.id" 
+				@click="handleItemClick(item)">
 				<view class="video-item">
-					<video style="width: 100%;" :src="item.url" :poster="item.thumbnail"></video>
+					<uv-image width="100%" height="180px" :src="item.thumbnail"></uv-image>
 					<uv-gap height="20rpx"></uv-gap>
 					<uv-text :size="16" :bold="true" color="uni-text-color" :text="item.name"></uv-text>
 				</view>
@@ -46,6 +47,15 @@
 		await loadCategories()
 		await loadData()
 	})
+	
+	function handleItemClick(item) {
+		uni.navigateTo({
+			url: '/pages/videos/detail',
+			success(res) {
+				res.eventChannel.emit('videoDetail', {detail: item})
+			}
+		})
+	}
 	
 	async function handleTabChange(e) {
 		formData.value.category = e.index == 0 ? '' : categoriesData.value[e.index - 1]

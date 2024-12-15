@@ -10,6 +10,7 @@ class VideoItem {
 
     static constraints = {
         name maxSize: 500
+        url widget: 'textarea'
         thumbnail nullable: true, blank: true
     }
     static mapping = {
