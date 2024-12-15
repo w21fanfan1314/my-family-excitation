@@ -7,7 +7,11 @@
 			<tui-list-cell v-for="item in videoData.items" :key="'video-item-' + item.id" 
 				@click="handleItemClick(item)">
 				<view class="video-item">
-					<uv-image width="100%" height="180px" :src="item.thumbnail"></uv-image>
+					<!-- <uv-image width="100%" height="180px" :src="item.thumbnail"></uv-image> -->
+					<view style="height: 200px; display: flex; flex-direction: column;">
+						<view class="thumbnail" v-html="html(item.url)"></view>
+						<view style="position: absolute; top: 0; width: 100%; height: 100%;"></view>
+					</view>
 					<uv-gap height="20rpx"></uv-gap>
 					<uv-text :size="16" :bold="true" color="uni-text-color" :text="item.name"></uv-text>
 				</view>
@@ -47,6 +51,12 @@
 		await loadCategories()
 		await loadData()
 	})
+	
+	function html(url) {
+		return url?.replace(/style=".*?"|style=".*?"/, '')
+			?.replace("autoplay;", '')
+			?.replace('allowfullscreen="true"','')
+	}
 	
 	function handleItemClick(item) {
 		uni.navigateTo({
@@ -128,11 +138,21 @@
 	.bilibili {
 		display: flex;
 		flex-direction: column;
-		width: 750rpx;
 		
 		.video-item {
 			display: flex;
 			flex-direction: column;
+			
+			.thumbnail {
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+				height: 100%;
+				
+				:first-child {
+					flex: 1;
+				}
+			}
 		}
 	}
 </style>
