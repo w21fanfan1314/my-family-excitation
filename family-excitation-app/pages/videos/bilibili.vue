@@ -7,8 +7,8 @@
 			<tui-list-cell v-for="item in videoData.items" :key="'video-item-' + item.id" 
 				@click="handleItemClick(item)">
 				<view class="video-item">
-					<!-- <uv-image width="100%" height="180px" :src="item.thumbnail"></uv-image> -->
-					<view style="height: 200px; display: flex; flex-direction: column;">
+					<uv-image v-if="item.category === '直播'" width="100%" height="180px" src="https://yx-web-nosdn.netease.im/quickhtml/assets/yunxin/node-website/live/%E5%A8%B1%E4%B9%90%E7%9B%B4%E6%92%AD.png"></uv-image>
+					<view v-else style="height: 200px; display: flex; flex-direction: column;">
 						<view class="thumbnail" v-html="html(item.url)"></view>
 						<view style="position: absolute; top: 0; width: 100%; height: 100%;"></view>
 					</view>
