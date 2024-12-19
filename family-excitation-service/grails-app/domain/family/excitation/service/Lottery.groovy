@@ -5,6 +5,8 @@ class Lottery {
     String image
     Currency currency
     Double amount = 0
+    // -1 不受数量限制
+    int count = -1
     LotteryType type = LotteryType.AMOUNT
     Date dateCreated
     Date lastUpdated
@@ -16,6 +18,7 @@ class Lottery {
         amount min: 0d
         records nullable: true, display: false
         currency nullable: true
+        count min: -1
     }
 
     static mapping = {

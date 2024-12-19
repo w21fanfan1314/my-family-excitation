@@ -144,7 +144,7 @@ class BootStrap {
                 lotteryService.save(new Lottery(name: "现金5元", image: 'https://png.pngtree.com/element_our/20190529/ourmid/pngtree-round-cartoon-gold-coin-image_1194649.jpg', type: LotteryType.AMOUNT, amount: 5, currency: rmb))
                 lotteryService.save(new Lottery(name: "遥控车", image: 'https://bpic.588ku.com/element_pic/24/01/23/d4341d55b19a3a700dfc1b27dc2fbb84.png!/fw/350/quality/99/unsharp/true/compress/true', type: LotteryType.THING))
                 lotteryService.save(new Lottery(name: "精美小礼品", image: 'https://i-1.lanrentuku.com/2020/11/3/a7999f21-c054-4439-93ea-46221bbd5bfb.png', type: LotteryType.THING))
-                lotteryService.save(new Lottery(name: "铅笔", image: 'https://img95.699pic.com/xsj/14/lh/rp.jpg!/fw/700/watermark/url/L3hzai93YXRlcl9kZXRhaWwyLnBuZw/align/southeast', type: LotteryType.THING))
+                lotteryService.save(new Lottery(name: "铅笔", image: 'https://img95.699pic.com/xsj/14/lh/rp.jpg!/fw/700/watermark/url/L3hzai93YXRlcl9kZXRhaWwyLnBuZw/align/southeast', type: LotteryType.THING, count: 1))
 
                 videoItemService.save(new VideoItem(category: '搞笑', name: '你投的币最后都去哪儿了？', url: 'https://cn-gdfs-ct-01-05.bilivideo.com/upgcxcode/56/97/26790199756/26790199756-1-16.mp4?e=ig8euxZM2rNcNbRVhwdVhwdlhWdVhwdVhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&uipk=5&nbs=1&deadline=1733573953&gen=playurlv2&os=bcache&oi=0&trid=0000f2d42602597e482c9bf2628473df28fch&mid=0&platform=html5&og=cos&upsig=2ec3c1c2a01e9f1ac95a6dd3e0c0d505&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform,og&cdnid=60905&bvc=vod&nettype=0&f=h_0_0&bw=48093&logo=80000000'))
                 videoItemService.save(new VideoItem(category: '直播', name: '顶级阳谋，全体吃屎！', url: 'http://60.10.167.88:808/hls/57/index.m3u8'))
@@ -411,7 +411,8 @@ class BootStrap {
                     currency       : it.currency,
                     type           : it.type,
                     dateCreated    : it.dateCreated,
-                    lastUpdated    : it.lastUpdated
+                    lastUpdated    : it.lastUpdated,
+                    count          : it.count,
             ]
         }
 

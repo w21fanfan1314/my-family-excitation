@@ -64,6 +64,8 @@
 	const queryFormData = ref({
 		count: 5
 	})
+	// 领取奖品返回的数据
+	const saveLotteryRecordsData = ref()
 	// 中奖的概率 1-100
 	const probabilityWinning = ref(0)
 	// 抽中的奖品
@@ -104,9 +106,9 @@
 	})
 	// 抽奖机会
 	const lotteryChance = computed(() => user.userInfo?.lotteryChance || 0)
-	
-	
 	const windowHeight = computed(() => uni.getWindowInfo().windowHeight + 'px')
+	// 判断当前中奖的奖品数量是否为0
+	const currentLotteryZero = computed(() => saveLotteryRecordsData.value?.lottery && saveLotteryRecordsData.value.lottery.count === 0)
 	
 	onLoad(async() => {
 	    await user.userDetail({userId: user.userInfo.id})
@@ -123,6 +125,10 @@
 	
 	async function handleStartClick() {
 		if (status.value === 'ready') {
+			if (currentLotteryZero.value) {
+				// 重新加载
+				await loadPrizeData()	
+			}
 			probabilityWinning.value = _.random(20, 50, false)
 			selectedPrizeIndex.value = 0
 			status.value = "start"
@@ -207,14 +213,15 @@
 	        const res = await saveLotteryRecords({
 				"lottery.id": winData.value.id
 			})
-	        if (res.code === 200) {
+	        if (res?.code === 200) {
+				saveLotteryRecordsData.value = res?.data
 	            await user.userDetail({userId: user.userInfo.id})
 				if (winData.value.type === 'AMOUNT') {
 					await user.loadUserBalance()
 				}
 	        } else {
 	            uni.showToast({
-	                title: res.msg,
+	                title: res?.msg,
 	                icon: 'none'
 	            });
 	        }

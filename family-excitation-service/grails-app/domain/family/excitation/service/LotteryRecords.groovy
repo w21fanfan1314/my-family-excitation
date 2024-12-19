@@ -26,6 +26,10 @@ class LotteryRecords {
                 user.save()
             }
         }
+        // 减少奖品数量
+        if (lottery?.count > 0) {
+            lottery.count --
+        }
     }
 
     static mapping = {

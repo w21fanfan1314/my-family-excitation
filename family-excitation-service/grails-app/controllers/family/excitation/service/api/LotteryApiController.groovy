@@ -33,7 +33,7 @@ class LotteryApiController {
 
     // 返回指定数量的抽奖奖品
     def giveLotteries(int count) {
-        def list = Lottery.list()
+        def list = Lottery.findAllByCountGreaterThanOrCount(0, -1)
         def result = []
         for (int i = 0; i < count; i++) {
             if (list.empty) {
